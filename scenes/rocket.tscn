@@ -1,34 +1,68 @@
-[gd_scene load_steps=8 format=3 uid="uid://dy2pfkqfm5d0h"]
+[gd_scene load_steps=9 format=3 uid="uid://dy2pfkqfm5d0h"]
 
 [ext_resource type="ArrayMesh" uid="uid://d3tat8utp34d3" path="res://objects/cylinder.obj" id="1_07b4d"]
 [ext_resource type="ArrayMesh" uid="uid://bcmf676q8g8w6" path="res://objects/fins.obj" id="2_d4paf"]
 [ext_resource type="ArrayMesh" uid="uid://dvgr03j22vmd6" path="res://objects/nose.obj" id="3_ortt4"]
-[ext_resource type="Script" path="res://Scripts/rocket.gd" id="4_script"]
+[ext_resource type="Script" uid="uid://d17eor3lih6hh" path="res://Scripts/rocket.gd" id="4_script"]
+[ext_resource type="FontFile" uid="uid://bs8kq6nwr55l6" path="res://ui/fonts/BrunoAce.ttf" id="5_font"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cyl"]
-albedo_color = Color(0.8, 0.8, 0.8, 1)
-metallic = 0.6
-roughness = 0.4
+albedo_color = Color(0.95, 0.95, 0.95, 1)
+metallic = 0.2
+roughness = 0.6
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fins"]
-albedo_color = Color(0.15, 0.15, 0.15, 1)
+albedo_color = Color(0.08, 0.08, 0.08, 1)
+metallic = 0.5
+roughness = 0.3
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nose"]
-albedo_color = Color(0.9, 0.1, 0.1, 1)
+albedo_color = Color(1, 0.45, 0, 1)
+metallic = 0.4
+roughness = 0.4
 
 [node name="Rocket" type="Node3D"]
 script = ExtResource("4_script")
 
 [node name="Visuals" type="Node3D" parent="."]
+transform = Transform3D(-0.9445931, 0, 0.32817346, 0, 1, 0, -0.32817346, 0, -0.9445931, 0, 0, 0)
 
 [node name="Cylinder" type="MeshInstance3D" parent="Visuals"]
+material_override = SubResource("StandardMaterial3D_cyl")
 mesh = ExtResource("1_07b4d")
-surface_material_override/0 = SubResource("StandardMaterial3D_cyl")
 
 [node name="Fins" type="MeshInstance3D" parent="Visuals"]
+material_override = SubResource("StandardMaterial3D_fins")
 mesh = ExtResource("2_d4paf")
-surface_material_override/0 = SubResource("StandardMaterial3D_fins")
 
 [node name="Nose" type="MeshInstance3D" parent="Visuals"]
+material_override = SubResource("StandardMaterial3D_nose")
 mesh = ExtResource("3_ortt4")
-surface_material_override/0 = SubResource("StandardMaterial3D_nose")
+
+[node name="Label1" type="Label3D" parent="Visuals"]
+transform = Transform3D(-8.6352806e-08, -0.8141155, 0.580703, 1.0000002, -4.3711385e-08, 8.74228e-08, -4.5788926e-08, 0.58070284, 0.81411576, 0.7585773, 0.041764036, 0.7976904)
+modulate = Color(1, 0.45, 0, 1)
+text = "LOADING"
+font = ExtResource("5_font")
+font_size = 96
+
+[node name="Label2" type="Label3D" parent="Visuals"]
+transform = Transform3D(-4.5788926e-08, 0.58070284, 0.81411576, 1.0000002, -4.3711385e-08, 8.74228e-08, 8.6352806e-08, 0.8141155, -0.580703, 0.7976904, 0.041764036, -0.7585773)
+modulate = Color(1, 0.45, 0, 1)
+text = "LOADING"
+font = ExtResource("5_font")
+font_size = 96
+
+[node name="Label3" type="Label3D" parent="Visuals"]
+transform = Transform3D(8.6352806e-08, 0.8141155, -0.580703, 1.0000002, -4.3711385e-08, 8.74228e-08, 4.5788926e-08, -0.58070284, -0.81411576, -0.7585773, 0.041764036, -0.7976904)
+modulate = Color(1, 0.45, 0, 1)
+text = "LOADING"
+font = ExtResource("5_font")
+font_size = 96
+
+[node name="Label4" type="Label3D" parent="Visuals"]
+transform = Transform3D(4.5788926e-08, -0.58070284, -0.81411576, 1.0000002, -4.3711385e-08, 8.74228e-08, -8.6352806e-08, -0.8141155, 0.580703, -0.7976904, 0.041764036, 0.7585773)
+modulate = Color(1, 0.45, 0, 1)
+text = "LOADING"
+font = ExtResource("5_font")
+font_size = 96
