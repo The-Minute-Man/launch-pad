@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://bs8kq6nwr55l6"
-path="res://.godot/imported/BrunoAce.ttf-b34fd35a90aacaecfa8127f85c6f8e44.fontdata"
+uid="uid://blbhqe05m1fe5"
+path="res://.godot/imported/Rajdhani.ttf-7d5c9b4e4b38c7a4b547a1b9d61da6c9.fontdata"
 
 [deps]
 
-source_file="res://assets/Fonts/BrunoAce.ttf"
-dest_files=["res://.godot/imported/BrunoAce.ttf-b34fd35a90aacaecfa8127f85c6f8e44.fontdata"]
+source_file="res://ui/Fonts/Rajdhani.ttf"
+dest_files=["res://.godot/imported/Rajdhani.ttf-7d5c9b4e4b38c7a4b547a1b9d61da6c9.fontdata"]
 
 [params]
 
@@ -30,12 +30,7 @@ Fallbacks=null
 fallbacks=[]
 Compress=null
 compress=true
-preload=[{
-"chars": [],
-"glyphs": [],
-"name": "New Configuration",
-"size": Vector2i(16, 0)
-}]
+preload=[]
 language_support={}
 script_support={}
 opentype_features={}

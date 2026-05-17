@@ -1,0 +1,29 @@
+You're building an open-source rocket design optimizer in Godot 4. Here's what it does:
+The core idea
+The user inputs a set of constraints — things like target altitude, max diameter, motor class, stability margin — and the app automatically generates and evolves hundreds of rocket designs using a Genetic Algorithm (GA). Instead of designing one rocket manually, the app does the exploring for you.
+How the GA works
+
+Each rocket's dimensions become a "genome" (a set of variables like body diameter, length, fin size, nose cone shape)
+Hundreds of rockets are evaluated across multiple generations
+Each generation keeps the best performers and breeds new designs from them
+Fitness is scored using Barrowman equations for stability and a physics model for apogee
+
+What the user sees
+
+A clean input dashboard to set their constraints
+A gallery of the top optimized rocket candidates
+Each card shows stats (apogee, stability, diameter, motor)
+The user picks the one they want to build
+Eventually exports to a buildable format
+
+The tech stack
+
+Godot 4 (UI + 3D visualization + GA engine all in one)
+GDScript for the GA and physics math
+Barrowman equations for aerodynamic stability
+Antigravity + godot-mcp for AI-assisted coding later
+
+The goal
+A portfolio-level project bridging aerospace physics, evolutionary computing, and interactive 3D graphics — all running fully offline on the user's device.
+
+Want me to go deeper on any part of it?Sonnet 4.6

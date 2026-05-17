@@ -3,12 +3,12 @@
 importer="font_data_dynamic"
 type="FontFile"
 uid="uid://bbat4oxcddomw"
-path="res://.godot/imported/TitilliumWeb.ttf-5e2ebe39e791631e58166188d059f6a0.fontdata"
+path="res://.godot/imported/TitilliumWeb.ttf-2381e5f5b4d5c4af12505c21cbecf81a.fontdata"
 
 [deps]
 
-source_file="res://assets/Fonts/TitilliumWeb.ttf"
-dest_files=["res://.godot/imported/TitilliumWeb.ttf-5e2ebe39e791631e58166188d059f6a0.fontdata"]
+source_file="res://ui/Fonts/TitilliumWeb.ttf"
+dest_files=["res://.godot/imported/TitilliumWeb.ttf-2381e5f5b4d5c4af12505c21cbecf81a.fontdata"]
 
 [params]
 

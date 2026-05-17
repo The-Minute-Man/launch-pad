@@ -1,8 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://dy2pfkqfm5d0h"]
-
-[ext_resource type="PackedScene" uid="uid://0gktvt41shqn" path="res://objects/rocket.glb" id="1_5icsd"]
-
-[node name="Node3D" type="Node3D"]
-
-[node name="rocket" parent="." instance=ExtResource("1_5icsd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.85614955, 0, -1.3291497)

@@ -1,0 +1,34 @@
+[gd_scene load_steps=8 format=3 uid="uid://dy2pfkqfm5d0h"]
+
+[ext_resource type="ArrayMesh" uid="uid://d3tat8utp34d3" path="res://objects/cylinder.obj" id="1_07b4d"]
+[ext_resource type="ArrayMesh" uid="uid://bcmf676q8g8w6" path="res://objects/fins.obj" id="2_d4paf"]
+[ext_resource type="ArrayMesh" uid="uid://dvgr03j22vmd6" path="res://objects/nose.obj" id="3_ortt4"]
+[ext_resource type="Script" path="res://Scripts/rocket.gd" id="4_script"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cyl"]
+albedo_color = Color(0.8, 0.8, 0.8, 1)
+metallic = 0.6
+roughness = 0.4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fins"]
+albedo_color = Color(0.15, 0.15, 0.15, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nose"]
+albedo_color = Color(0.9, 0.1, 0.1, 1)
+
+[node name="Rocket" type="Node3D"]
+script = ExtResource("4_script")
+
+[node name="Visuals" type="Node3D" parent="."]
+
+[node name="Cylinder" type="MeshInstance3D" parent="Visuals"]
+mesh = ExtResource("1_07b4d")
+surface_material_override/0 = SubResource("StandardMaterial3D_cyl")
+
+[node name="Fins" type="MeshInstance3D" parent="Visuals"]
+mesh = ExtResource("2_d4paf")
+surface_material_override/0 = SubResource("StandardMaterial3D_fins")
+
+[node name="Nose" type="MeshInstance3D" parent="Visuals"]
+mesh = ExtResource("3_ortt4")
+surface_material_override/0 = SubResource("StandardMaterial3D_nose")

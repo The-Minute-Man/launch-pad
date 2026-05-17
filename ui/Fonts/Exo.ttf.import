@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://bwxuk20uquurn"
-path="res://.godot/imported/Barlow.ttf-16d82a0d4249ce13fb4caa5f33623334.fontdata"
+uid="uid://bo48d4dwke6uv"
+path="res://.godot/imported/Exo.ttf-04e31e60a5960c1dc3ff66ae7486d36f.fontdata"
 
 [deps]
 
-source_file="res://assets/Fonts/Barlow.ttf"
-dest_files=["res://.godot/imported/Barlow.ttf-16d82a0d4249ce13fb4caa5f33623334.fontdata"]
+source_file="res://ui/Fonts/Exo.ttf"
+dest_files=["res://.godot/imported/Exo.ttf-04e31e60a5960c1dc3ff66ae7486d36f.fontdata"]
 
 [params]
 
@@ -30,12 +30,7 @@ Fallbacks=null
 fallbacks=[]
 Compress=null
 compress=true
-preload=[{
-"chars": [],
-"glyphs": [],
-"name": "New Configuration",
-"size": Vector2i(16, 0)
-}]
+preload=[]
 language_support={}
 script_support={}
 opentype_features={}

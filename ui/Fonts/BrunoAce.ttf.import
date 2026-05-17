@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://1mr0a3hf1i6w"
-path="res://.godot/imported/OpenSans.ttf-a0140041deae198ee0a3c8d36f929fcb.fontdata"
+uid="uid://bs8kq6nwr55l6"
+path="res://.godot/imported/BrunoAce.ttf-24f7e264dfeca54a9bdb02093943eefb.fontdata"
 
 [deps]
 
-source_file="res://assets/Fonts/OpenSans.ttf"
-dest_files=["res://.godot/imported/OpenSans.ttf-a0140041deae198ee0a3c8d36f929fcb.fontdata"]
+source_file="res://ui/Fonts/BrunoAce.ttf"
+dest_files=["res://.godot/imported/BrunoAce.ttf-24f7e264dfeca54a9bdb02093943eefb.fontdata"]
 
 [params]
 
@@ -30,7 +30,12 @@ Fallbacks=null
 fallbacks=[]
 Compress=null
 compress=true
-preload=[]
+preload=[{
+"chars": [],
+"glyphs": [],
+"name": "New Configuration",
+"size": Vector2i(16, 0)
+}]
 language_support={}
 script_support={}
 opentype_features={}
