@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://dy2pfkqfm5d0h"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_bksbl"]
+top_radius = 1.31
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_5icsd"]
+
+[node name="Rocket" type="Node3D"]
+
+[node name="Nosecone" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.051938057, 0.37768787, -0.35648024)
+mesh = SubResource("CylinderMesh_bksbl")
+
+[node name="BodyTube" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.3254952)
+mesh = SubResource("CylinderMesh_5icsd")
+
+[node name="Fin1" type="MeshInstance3D" parent="."]
+
+[node name="Fin2" type="MeshInstance3D" parent="."]
+
+[node name="Fin3" type="MeshInstance3D" parent="."]
+
+[node name="Fin4" type="MeshInstance3D" parent="."]

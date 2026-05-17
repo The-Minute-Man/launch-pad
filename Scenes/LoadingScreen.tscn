@@ -1,0 +1,48 @@
+[gd_scene load_steps=2 format=3 uid="uid://cmnjjpxag2tae"]
+
+[ext_resource type="Theme" uid="uid://dwh31hw3wv34a" path="res://assets/theme1.tres" id="1_kddo8"]
+
+[node name="LoadingScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+color = Color(0.12156863, 0.12156863, 0.11764706, 1)
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -385.0
+offset_top = -3.0
+offset_right = 375.0
+offset_bottom = 216.0
+grow_horizontal = 2
+theme = ExtResource("1_kddo8")
+theme_override_font_sizes/font_size = 160
+text = "Loading"
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+transparent_bg = true
+size = Vector2i(1280, 720)
+
+[node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewport"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="SubViewportContainer/SubViewport"]
