@@ -24,7 +24,7 @@ window/stretch/aspect="expand"
 [file_customization]
 
 folder_colors={
-"res://Objects/": "orange",
-"res://Scenes/": "yellow",
-"res://assets/": "red"
+"res://assets/": "red",
+"res://objects/": "orange",
+"res://scenes/": "yellow"
 }
