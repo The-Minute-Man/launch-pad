@@ -3,12 +3,12 @@
 importer="font_data_dynamic"
 type="FontFile"
 uid="uid://d17e4q5tc8s23"
-path="res://.godot/imported/Quantico.ttf-63f0e6fd3ca49ada0f5abf098fc80b11.fontdata"
+path="res://.godot/imported/Quantico.ttf-fe50c5aa5455512825fcb0e7790733a5.fontdata"
 
 [deps]
 
-source_file="res://ui/Fonts/Quantico.ttf"
-dest_files=["res://.godot/imported/Quantico.ttf-63f0e6fd3ca49ada0f5abf098fc80b11.fontdata"]
+source_file="res://ui/fonts/Quantico.ttf"
+dest_files=["res://.godot/imported/Quantico.ttf-fe50c5aa5455512825fcb0e7790733a5.fontdata"]
 
 [params]
 

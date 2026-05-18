@@ -1,6 +1,6 @@
-[gd_resource type="Theme" format=3 uid="uid://dgihhedsjca4b"]
+[gd_resource type="Theme" load_steps=27 format=3 uid="uid://dgihhedsjca4b"]
 
-[ext_resource type="FontFile" uid="uid://blbhqe05m1fe5" path="res://ui/Fonts/Rajdhani.ttf" id="1_eoogs"]
+[ext_resource type="FontFile" uid="uid://blbhqe05m1fe5" path="res://ui/fonts/Rajdhani.ttf" id="1_eoogs"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eoogs"]
 content_margin_left = 4.0

@@ -1,37 +1,42 @@
-[gd_scene format=3 uid="uid://cmnjjpxag2tae"]
+[gd_scene load_steps=5 format=3 uid="uid://cmnjjpxag2tae"]
 
 [ext_resource type="Theme" uid="uid://dwh31hw3wv34a" path="res://ui/themes/theme1.tres" id="1_jqyhx"]
+[ext_resource type="Script" uid="uid://xhjdsocrn1ay" path="res://scripts/loading_screen.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://dy2pfkqfm5d0h" path="res://scenes/rocket.tscn" id="2_x85qc"]
 
-[node name="LoadingScreen" type="Control" unique_id=475667563]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_button"]
+
+[node name="LoadingScreen" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_script")
 
-[node name="Background" type="ColorRect" parent="." unique_id=940963213]
-layout_mode = 0
-offset_right = 1280.0
-offset_bottom = 720.0
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 color = Color(0.12156863, 0.12156863, 0.11764706, 1)
 
-[node name="Label" type="Label" parent="." unique_id=655505725]
+[node name="Label" type="Label" parent="."]
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.09921875
-anchor_top = 0.004166667
-anchor_right = 0.9164063
-anchor_bottom = 0.22361112
-offset_right = 40.0
-offset_bottom = 23.0
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 80.0
+offset_bottom = 250.0
+grow_horizontal = 2
 theme = ExtResource("1_jqyhx")
 theme_override_font_sizes/font_size = 150
 text = "Launch Pad"
-metadata/_edit_use_anchors_ = true
+horizontal_alignment = 1
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=1874493833]
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -39,18 +44,36 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+stretch = true
 
-[node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=1427224728]
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
 transparent_bg = true
 handle_input_locally = false
-size = Vector2i(1280, 720)
+msaa_3d = 3
+size = Vector2i(1920, 1080)
 render_target_update_mode = 4
 
-[node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewport" unique_id=697429361]
+[node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewport"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="SubViewportContainer/SubViewport" unique_id=1167926265]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="SubViewportContainer/SubViewport"]
 transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 0, 5, 0)
 
-[node name="Rocket" parent="SubViewportContainer/SubViewport" unique_id=997836859 instance=ExtResource("2_x85qc")]
+[node name="Rocket" parent="SubViewportContainer/SubViewport" instance=ExtResource("2_x85qc")]
 transform = Transform3D(-2.6226834e-08, 0.6, 0, -0.6, -2.6226834e-08, 0, 0, 0, 0.6, 0, -1, 0)
+
+[node name="InvisibleButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_jqyhx")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_button")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_button")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_button")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_button")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_button")
+
+[connection signal="pressed" from="InvisibleButton" to="." method="_on_button_pressed"]
