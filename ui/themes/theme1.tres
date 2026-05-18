@@ -1,6 +1,6 @@
-[gd_resource type="Theme" load_steps=4 format=3 uid="uid://dwh31hw3wv34a"]
+[gd_resource type="Theme" format=3 uid="uid://dwh31hw3wv34a"]
 
-[ext_resource type="FontFile" uid="uid://bs8kq6nwr55l6" path="res://ui/fonts/BrunoAce.ttf" id="1_oijn2"]
+[ext_resource type="FontFile" uid="uid://bs8kq6nwr55l6" path="res://ui/Fonts/BrunoAce.ttf" id="1_oijn2"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uwrm3"]
 content_margin_left = 4.0
@@ -34,7 +34,7 @@ Label/constants/outline_size = 0
 Label/constants/shadow_offset_x = 5
 Label/constants/shadow_offset_y = 1
 Label/constants/shadow_outline_size = 1
-Label/font_sizes/font_size = 16
+Label/font_sizes/font_size = 150
 Label/fonts/font = ExtResource("1_oijn2")
 Label/styles/focus = SubResource("StyleBoxFlat_uwrm3")
 Label/styles/normal = SubResource("StyleBoxEmpty_01xgi")

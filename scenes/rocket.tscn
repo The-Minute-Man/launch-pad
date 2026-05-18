@@ -1,10 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://dy2pfkqfm5d0h"]
+[gd_scene format=3 uid="uid://dy2pfkqfm5d0h"]
 
 [ext_resource type="ArrayMesh" uid="uid://d3tat8utp34d3" path="res://objects/cylinder.obj" id="1_07b4d"]
 [ext_resource type="ArrayMesh" uid="uid://bcmf676q8g8w6" path="res://objects/fins.obj" id="2_d4paf"]
 [ext_resource type="ArrayMesh" uid="uid://dvgr03j22vmd6" path="res://objects/nose.obj" id="3_ortt4"]
-[ext_resource type="Script" uid="uid://d17eor3lih6hh" path="res://Scripts/rocket.gd" id="4_script"]
-[ext_resource type="FontFile" uid="uid://bs8kq6nwr55l6" path="res://ui/fonts/BrunoAce.ttf" id="5_font"]
+[ext_resource type="Script" uid="uid://d17eor3lih6hh" path="res://scripts/rocket.gd" id="4_script"]
+[ext_resource type="FontFile" uid="uid://bs8kq6nwr55l6" path="res://ui/Fonts/BrunoAce.ttf" id="5_font"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cyl"]
 albedo_color = Color(0.95, 0.95, 0.95, 1)

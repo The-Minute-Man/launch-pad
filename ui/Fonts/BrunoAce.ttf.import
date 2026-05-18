@@ -3,12 +3,12 @@
 importer="font_data_dynamic"
 type="FontFile"
 uid="uid://bs8kq6nwr55l6"
-path="res://.godot/imported/BrunoAce.ttf-3b362e62e1729f28f465430e83f15e46.fontdata"
+path="res://.godot/imported/BrunoAce.ttf-24f7e264dfeca54a9bdb02093943eefb.fontdata"
 
 [deps]
 
-source_file="res://ui/fonts/BrunoAce.ttf"
-dest_files=["res://.godot/imported/BrunoAce.ttf-3b362e62e1729f28f465430e83f15e46.fontdata"]
+source_file="res://ui/Fonts/BrunoAce.ttf"
+dest_files=["res://.godot/imported/BrunoAce.ttf-24f7e264dfeca54a9bdb02093943eefb.fontdata"]
 
 [params]
 

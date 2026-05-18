@@ -3,12 +3,12 @@
 importer="font_data_dynamic"
 type="FontFile"
 uid="uid://bwxuk20uquurn"
-path="res://.godot/imported/Barlow.ttf-407fcaad9ed33dedf3acc640cc740977.fontdata"
+path="res://.godot/imported/Barlow.ttf-8b86e2a55f563f55f564d7284b2032fa.fontdata"
 
 [deps]
 
-source_file="res://ui/fonts/Barlow.ttf"
-dest_files=["res://.godot/imported/Barlow.ttf-407fcaad9ed33dedf3acc640cc740977.fontdata"]
+source_file="res://ui/Fonts/Barlow.ttf"
+dest_files=["res://.godot/imported/Barlow.ttf-8b86e2a55f563f55f564d7284b2032fa.fontdata"]
 
 [params]
 
