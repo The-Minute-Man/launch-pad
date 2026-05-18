@@ -21,46 +21,55 @@ albedo_color = Color(1, 0.45, 0, 1)
 metallic = 0.4
 roughness = 0.4
 
-[node name="Rocket" type="Node3D"]
+[node name="Rocket" type="Node3D" unique_id=528649216]
 script = ExtResource("4_script")
 
-[node name="Visuals" type="Node3D" parent="."]
-transform = Transform3D(-0.9445931, 0, 0.32817346, 0, 1, 0, -0.32817346, 0, -0.9445931, 0, 0, 0)
+[node name="Visuals" type="Node3D" parent="." unique_id=1425026765]
+transform = Transform3D(0.06084211, 0, 0.99790144, 0, 1, 0, -0.99790144, 0, 0.06084211, 0, 0, 0)
 
-[node name="Cylinder" type="MeshInstance3D" parent="Visuals"]
+[node name="Cylinder" type="MeshInstance3D" parent="Visuals" unique_id=1200868283]
 material_override = SubResource("StandardMaterial3D_cyl")
 mesh = ExtResource("1_07b4d")
 
-[node name="Fins" type="MeshInstance3D" parent="Visuals"]
+[node name="Fins" type="MeshInstance3D" parent="Visuals" unique_id=1996949736]
 material_override = SubResource("StandardMaterial3D_fins")
 mesh = ExtResource("2_d4paf")
 
-[node name="Nose" type="MeshInstance3D" parent="Visuals"]
+[node name="Nose" type="MeshInstance3D" parent="Visuals" unique_id=150682216]
 material_override = SubResource("StandardMaterial3D_nose")
 mesh = ExtResource("3_ortt4")
 
-[node name="Label1" type="Label3D" parent="Visuals"]
-transform = Transform3D(-8.6352806e-08, -0.8141155, 0.580703, 1.0000002, -4.3711385e-08, 8.74228e-08, -4.5788926e-08, 0.58070284, 0.81411576, 0.7585773, 0.041764036, 0.7976904)
-modulate = Color(1, 0.45, 0, 1)
+[node name="Label1" type="Label3D" parent="Visuals" unique_id=1520038645]
+transform = Transform3D(-8.6352806e-08, -0.8141155, 0.580703, 1.0000002, -4.3711385e-08, 8.74228e-08, -4.578893e-08, 0.58070284, 0.8141158, 0.7449054, 0.041764036, 0.7732614)
+modulate = Color(0.078431375, 0.078431375, 0.078431375, 1)
+outline_modulate = Color(0.078431375, 0.078431375, 0.078431375, 1)
 text = "LOADING"
 font = ExtResource("5_font")
 font_size = 96
 
-[node name="Label2" type="Label3D" parent="Visuals"]
+[node name="Label1shadow" type="Label3D" parent="Visuals" unique_id=451954982]
+transform = Transform3D(-8.6352806e-08, -0.8141155, 0.580703, 1.0000002, -4.3711385e-08, 8.74228e-08, -4.578893e-08, 0.58070284, 0.8141158, 0.7450434, 0.055902436, 0.7595165)
+modulate = Color(1, 0.4509804, 0, 1)
+outline_modulate = Color(0.078431375, 0.078431375, 0.078431375, 1)
+text = "LOADING"
+font = ExtResource("5_font")
+font_size = 96
+
+[node name="Label2" type="Label3D" parent="Visuals" unique_id=207827599]
 transform = Transform3D(-4.5788926e-08, 0.58070284, 0.81411576, 1.0000002, -4.3711385e-08, 8.74228e-08, 8.6352806e-08, 0.8141155, -0.580703, 0.7976904, 0.041764036, -0.7585773)
 modulate = Color(1, 0.45, 0, 1)
 text = "LOADING"
 font = ExtResource("5_font")
 font_size = 96
 
-[node name="Label3" type="Label3D" parent="Visuals"]
+[node name="Label3" type="Label3D" parent="Visuals" unique_id=1106969879]
 transform = Transform3D(8.6352806e-08, 0.8141155, -0.580703, 1.0000002, -4.3711385e-08, 8.74228e-08, 4.5788926e-08, -0.58070284, -0.81411576, -0.7585773, 0.041764036, -0.7976904)
 modulate = Color(1, 0.45, 0, 1)
 text = "LOADING"
 font = ExtResource("5_font")
 font_size = 96
 
-[node name="Label4" type="Label3D" parent="Visuals"]
+[node name="Label4" type="Label3D" parent="Visuals" unique_id=799782353]
 transform = Transform3D(4.5788926e-08, -0.58070284, -0.81411576, 1.0000002, -4.3711385e-08, 8.74228e-08, -8.6352806e-08, -0.8141155, 0.580703, -0.7976904, 0.041764036, 0.7585773)
 modulate = Color(1, 0.45, 0, 1)
 text = "LOADING"

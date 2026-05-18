@@ -2,7 +2,6 @@
 
 [ext_resource type="Theme" uid="uid://dwh31hw3wv34a" path="res://ui/themes/theme1.tres" id="1_jqyhx"]
 [ext_resource type="PackedScene" uid="uid://dy2pfkqfm5d0h" path="res://scenes/rocket.tscn" id="2_x85qc"]
-[ext_resource type="Theme" uid="uid://dgihhedsjca4b" path="res://ui/themes/theme2.tres" id="3_ij0l4"]
 
 [node name="LoadingScreen" type="Control" unique_id=475667563]
 layout_mode = 3
@@ -55,21 +54,3 @@ transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -
 
 [node name="Rocket" parent="SubViewportContainer/SubViewport" unique_id=997836859 instance=ExtResource("2_x85qc")]
 transform = Transform3D(-2.6226834e-08, 0.6, 0, -0.6, -2.6226834e-08, 0, 0, 0, 0.6, 0, -1, 0)
-
-[node name="Label2" type="Label" parent="." unique_id=1341658710]
-layout_mode = 0
-offset_left = 11.0
-offset_top = 231.0
-offset_right = 321.0
-offset_bottom = 300.0
-theme = ExtResource("3_ij0l4")
-text = "This is a test "
-
-[node name="Button" type="Button" parent="." unique_id=328706646]
-layout_mode = 0
-offset_left = 228.0
-offset_top = 228.0
-offset_right = 369.0
-offset_bottom = 288.0
-theme = ExtResource("3_ij0l4")
-text = "Button"
