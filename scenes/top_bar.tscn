@@ -1,25 +1,25 @@
-[gd_scene load_steps=5 format=3 uid="uid://b5xocivocnbc4"]
+[gd_scene load_steps=9 format=3 uid="uid://b5xocivocnbc4"]
 
 [ext_resource type="Script" uid="uid://6xojgphhss6m" path="res://scripts/top_bar.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://dy2pfkqfm5d0h" path="res://scenes/rocket.tscn" id="2_rocket"]
 [ext_resource type="Theme" uid="uid://dgihhedsjca4b" path="res://ui/themes/Rajdhani.tres" id="3_theme"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
+bg_color = Color(0.18, 0.18, 0.17, 1)
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_rocket"]
 viewport_path = NodePath("SubViewport")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_menu"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
-bg_color = Color(0.18, 0.18, 0.17, 1)
-
-[sub_resource type="StyleBoxLine" id="StyleBoxLine_sep"]
-color = Color(0.25, 0.25, 0.24, 1)
-
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_vsep"]
 color = Color(0.25, 0.25, 0.24, 1)
 grow_begin = -4.0
 grow_end = -4.0
 vertical = true
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_sep"]
+color = Color(0.25, 0.25, 0.24, 1)
 
 [node name="TopBar" type="PanelContainer"]
 anchors_preset = 10
@@ -67,7 +67,6 @@ theme_override_styles/separator = SubResource("StyleBoxLine_vsep")
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/h_separation = 24
-theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("StyleBoxEmpty_menu")
 
 [node name="File" type="PopupMenu" parent="VBox/HBox/MenuBar"]
