@@ -1,0 +1,124 @@
+[gd_scene load_steps=5 format=3 uid="uid://b5xocivocnbc4"]
+
+[ext_resource type="Script" uid="uid://6xojgphhss6m" path="res://scripts/top_bar.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://dy2pfkqfm5d0h" path="res://scenes/rocket.tscn" id="2_rocket"]
+[ext_resource type="Theme" uid="uid://dgihhedsjca4b" path="res://ui/themes/Rajdhani.tres" id="3_theme"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_rocket"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_menu"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
+bg_color = Color(0.18, 0.18, 0.17, 1)
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_sep"]
+color = Color(0.25, 0.25, 0.24, 1)
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_vsep"]
+color = Color(0.25, 0.25, 0.24, 1)
+grow_begin = -4.0
+grow_end = -4.0
+vertical = true
+
+[node name="TopBar" type="PanelContainer"]
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+theme = ExtResource("3_theme")
+theme_override_styles/panel = SubResource("StyleBoxFlat_bg")
+script = ExtResource("1_script")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="HBox" type="HBoxContainer" parent="VBox"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="LogoMargin" type="MarginContainer" parent="VBox/HBox"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+
+[node name="LogoRect" type="TextureRect" parent="VBox/HBox/LogoMargin"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+texture = SubResource("ViewportTexture_rocket")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="HomeButton" type="Button" parent="VBox/HBox/LogoMargin"]
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_menu")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_menu")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_menu")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_menu")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_menu")
+
+[node name="LogoSeparator" type="VSeparator" parent="VBox/HBox"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_vsep")
+
+[node name="MenuBar" type="MenuBar" parent="VBox/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 24
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxEmpty_menu")
+
+[node name="File" type="PopupMenu" parent="VBox/HBox/MenuBar"]
+item_count = 4
+item_0/text = "New Project"
+item_0/id = 0
+item_1/text = "Open Project Folder"
+item_1/id = 1
+item_2/id = 2
+item_2/separator = true
+item_3/text = "Exit"
+item_3/id = 3
+
+[node name="Edit" type="PopupMenu" parent="VBox/HBox/MenuBar"]
+item_count = 1
+item_0/text = "Preferences"
+item_0/id = 0
+
+[node name="View" type="PopupMenu" parent="VBox/HBox/MenuBar"]
+item_count = 1
+item_0/text = "Reset Layout"
+item_0/id = 0
+
+[node name="Help" type="PopupMenu" parent="VBox/HBox/MenuBar"]
+item_count = 2
+item_0/text = "Documentation"
+item_0/id = 0
+item_1/text = "About LaunchPad"
+item_1/id = 1
+
+[node name="MenuSeparator" type="HSeparator" parent="VBox"]
+layout_mode = 2
+theme_override_constants/separation = 1
+theme_override_styles/separator = SubResource("StyleBoxLine_sep")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+transparent_bg = true
+handle_input_locally = false
+msaa_3d = 3
+size = Vector2i(256, 256)
+render_target_update_mode = 4
+
+[node name="Camera3D" type="Camera3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.2)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="SubViewport"]
+transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 0, 5, 0)
+
+[node name="Rocket" parent="SubViewport" instance=ExtResource("2_rocket")]
+transform = Transform3D(0.424264, 0.424264, 0, -0.424264, 0.424264, 0, 0, 0, 0.6, 0, 0, 0)
+rocket_text = ""
+is_rotating = false
+
+[connection signal="pressed" from="VBox/HBox/LogoMargin/HomeButton" to="." method="_on_home_button_pressed"]

@@ -1,0 +1,102 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Theme" uid="uid://dgihhedsjca4b" path="res://ui/themes/Rajdhani.tres" id="1_theme"]
+[ext_resource type="Script" path="res://scripts/project_card.gd" id="2_script"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
+content_margin_left = 20.0
+content_margin_top = 16.0
+content_margin_right = 20.0
+content_margin_bottom = 16.0
+bg_color = Color(0.16, 0.16, 0.16, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.25, 0.25, 0.25, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_delete"]
+content_margin_left = 12.0
+content_margin_top = 6.0
+content_margin_right = 12.0
+content_margin_bottom = 6.0
+bg_color = Color(0.3, 0.08, 0.08, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.5, 0.15, 0.15, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[node name="ProjectCard" type="PanelContainer"]
+custom_minimum_size = Vector2(380, 200)
+theme = ExtResource("1_theme")
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+script = ExtResource("2_script")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="TopRow" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="NameLabel" type="Label" parent="VBox/TopRow" unique_name_in_owner=true]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 28
+text = "Project Name"
+
+[node name="DeleteButton" type="Button" parent="VBox/TopRow" unique_name_in_owner=true]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBoxFlat_delete")
+theme_override_styles/hover = SubResource("StyleBoxFlat_delete")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_delete")
+text = "Delete"
+
+[node name="Spacer1" type="Control" parent="VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 4)
+
+[node name="DescLabel" type="Label" parent="VBox" unique_name_in_owner=true]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.6, 0.6, 0.58, 1)
+text = "No description"
+autowrap_mode = 2
+
+[node name="Spacer2" type="Control" parent="VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BottomRow" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="MotorLabel" type="Label" parent="VBox/BottomRow" unique_name_in_owner=true]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.75, 0.35, 0.05, 1)
+text = "Motor: C"
+
+[node name="AltitudeLabel" type="Label" parent="VBox/BottomRow" unique_name_in_owner=true]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.75, 0.35, 0.05, 1)
+text = "Alt: 1000m"
+horizontal_alignment = 2
+
+[node name="DateLabel" type="Label" parent="VBox/BottomRow" unique_name_in_owner=true]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.5, 0.5, 0.48, 1)
+text = "2026-05-18"
+horizontal_alignment = 2

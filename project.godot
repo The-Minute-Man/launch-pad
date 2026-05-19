@@ -16,9 +16,13 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 config/name="LaunchPad"
 run/main_scene="uid://cmnjjpxag2tae"
-config/features=PackedStringArray("4.6", "Forward Plus")
-boot_splash/show_image=false
+config/features=PackedStringArray("4.5", "Forward Plus")
 boot_splash/bg_color=Color(0.121569, 0.121569, 0.117647, 1)
+boot_splash/show_image=false
+
+[autoload]
+
+ProjectManager="*res://scripts/project_manager.gd"
 
 [display]
 
