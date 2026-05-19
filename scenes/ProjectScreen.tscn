@@ -1,12 +1,9 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3 uid="uid://btt61hejsbc00"]
 
 [ext_resource type="Theme" uid="uid://dgihhedsjca4b" path="res://ui/themes/Rajdhani.tres" id="1_theme"]
 [ext_resource type="FontFile" uid="uid://bs8kq6nwr55l6" path="res://ui/fonts/BrunoAce.ttf" id="2_brfont"]
-[ext_resource type="Script" path="res://scripts/project_screen.gd" id="3_script"]
-[ext_resource type="PackedScene" path="res://scenes/top_bar.tscn" id="4_topbar"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_menu"]
-
+[ext_resource type="Script" uid="uid://bnw8fsmtcqxv7" path="res://scripts/project_screen.gd" id="3_script"]
+[ext_resource type="PackedScene" uid="uid://b5xocivocnbc4" path="res://scenes/top_bar.tscn" id="4_topbar"]
 
 [node name="ProjectScreen" type="Control"]
 layout_mode = 3
@@ -38,7 +35,6 @@ grow_vertical = 2
 [node name="TopBar" parent="VBoxLayout" instance=ExtResource("4_topbar")]
 layout_mode = 2
 
-
 [node name="ContentMargin" type="MarginContainer" parent="VBoxLayout"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -60,56 +56,56 @@ theme_override_fonts/font = ExtResource("2_brfont")
 theme_override_font_sizes/font_size = 48
 text = "Your Projects"
 
-[node name="NewProjectButton" type="Button" parent="VBoxLayout/ContentMargin/ContentVBox/HeaderRow" unique_name_in_owner=true]
-layout_mode = 2
+[node name="NewProjectButton" type="Button" parent="VBoxLayout/ContentMargin/ContentVBox/HeaderRow"]
 custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "+ New Project"
 
 [node name="Spacer" type="Control" parent="VBoxLayout/ContentMargin/ContentVBox"]
-layout_mode = 2
 custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxLayout/ContentMargin/ContentVBox"]
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="ProjectGrid" type="GridContainer" parent="VBoxLayout/ContentMargin/ContentVBox/ScrollContainer" unique_name_in_owner=true]
+[node name="ProjectGrid" type="GridContainer" parent="VBoxLayout/ContentMargin/ContentVBox/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-columns = 4
 theme_override_constants/h_separation = 20
 theme_override_constants/v_separation = 20
+columns = 4
 
-[node name="EmptyState" type="CenterContainer" parent="VBoxLayout/ContentMargin/ContentVBox" unique_name_in_owner=true]
+[node name="EmptyState" type="CenterContainer" parent="VBoxLayout/ContentMargin/ContentVBox"]
 visible = false
+custom_minimum_size = Vector2(0, 400)
 layout_mode = 2
 size_flags_vertical = 3
-custom_minimum_size = Vector2(0, 400)
 
 [node name="EmptyVBox" type="VBoxContainer" parent="VBoxLayout/ContentMargin/ContentVBox/EmptyState"]
 layout_mode = 2
 
 [node name="EmptyIcon" type="Label" parent="VBoxLayout/ContentMargin/ContentVBox/EmptyState/EmptyVBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 64
 theme_override_colors/font_color = Color(0.4, 0.4, 0.38, 1)
+theme_override_font_sizes/font_size = 64
 text = "—"
 horizontal_alignment = 1
 
 [node name="EmptyLabel" type="Label" parent="VBoxLayout/ContentMargin/ContentVBox/EmptyState/EmptyVBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
 theme_override_colors/font_color = Color(0.5, 0.5, 0.48, 1)
+theme_override_font_sizes/font_size = 28
 text = "No projects yet"
 horizontal_alignment = 1
 
 [node name="EmptySubLabel" type="Label" parent="VBoxLayout/ContentMargin/ContentVBox/EmptyState/EmptyVBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
 theme_override_colors/font_color = Color(0.4, 0.4, 0.38, 1)
+theme_override_font_sizes/font_size = 18
 text = "Click '+ New Project' to get started"
 horizontal_alignment = 1
 

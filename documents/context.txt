@@ -1,5 +1,5 @@
-You're building an open-source rocket design optimizer in Godot 4. Here's what it does:
-The core idea
+END Goal:
+The core idea- make a better version of Open Rocket. 
 The user inputs a set of constraints — things like target altitude, max diameter, motor class, stability margin — and the app automatically generates and evolves hundreds of rocket designs using a Genetic Algorithm (GA). Instead of designing one rocket manually, the app does the exploring for you.
 How the GA works
 
@@ -16,14 +16,23 @@ Each card shows stats (apogee, stability, diameter, motor)
 The user picks the one they want to build
 Eventually exports to a buildable format
 
-The tech stack
-
-Godot 4 (UI + 3D visualization + GA engine all in one)
-GDScript for the GA and physics math
-Barrowman equations for aerodynamic stability
-Antigravity + godot-mcp for AI-assisted coding later
-
 The goal
 A portfolio-level project bridging aerospace physics, evolutionary computing, and interactive 3D graphics — all running fully offline on the user's device.
 
-Want me to go deeper on any part of it?Sonnet 4.6
+Instructions:
+	After every time you change the code always edit this context.txt file with the
+	current state of the program, and goals for next time. NEVER USE EMOJI's in this
+	it looks extremely un porfesstional.
+	
+Current state. 
+We have an intro screen. With a rotatating rocket that says projects.
+The screen takes you to projects screen which currently has create
+new project button and a label with a instatiated top bar
+top bar has the settings, and our rocket Icon which takes us back
+to the projects screen currently.
+
+Our next goals will be:
+	1. Fix the 7 errors we currently have
+	2. Fix the intro screen looking unprofessonal
+	3. Add functioanlty to the program.
+	

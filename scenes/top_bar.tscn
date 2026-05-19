@@ -67,7 +67,8 @@ theme_override_styles/separator = SubResource("StyleBoxLine_vsep")
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/h_separation = 24
-theme_override_styles/normal = SubResource("StyleBoxEmpty_menu")
+theme_override_font_sizes/font_size = 20
+flat = true
 
 [node name="File" type="PopupMenu" parent="VBox/HBox/MenuBar"]
 item_count = 4
@@ -110,13 +111,13 @@ size = Vector2i(256, 256)
 render_target_update_mode = 4
 
 [node name="Camera3D" type="Camera3D" parent="SubViewport"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.5)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="SubViewport"]
 transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 0, 5, 0)
 
 [node name="Rocket" parent="SubViewport" instance=ExtResource("2_rocket")]
-transform = Transform3D(0.424264, 0.424264, 0, -0.424264, 0.424264, 0, 0, 0, 0.6, 0, 0, 0)
+transform = Transform3D(0.28284, 0.28284, 0, -0.28284, 0.28284, 0, 0, 0, 0.4, 0, 0, 0)
 rocket_text = ""
 is_rotating = false
 

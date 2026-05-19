@@ -40,3 +40,7 @@ folder_colors={
 "res://scripts/": "green",
 "res://ui/": "blue"
 }
+
+[gui]
+
+common/embed_subwindows=true
