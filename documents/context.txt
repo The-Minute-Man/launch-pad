@@ -1,38 +1,151 @@
-END Goal:
-The core idea- make a better version of Open Rocket. 
-The user inputs a set of constraints — things like target altitude, max diameter, motor class, stability margin — and the app automatically generates and evolves hundreds of rocket designs using a Genetic Algorithm (GA). Instead of designing one rocket manually, the app does the exploring for you.
-How the GA works
+================================================================================
+  LaunchPad -- Project Context
+  Last updated: 2026-05-19
+================================================================================
 
-Each rocket's dimensions become a "genome" (a set of variables like body diameter, length, fin size, nose cone shape)
-Hundreds of rockets are evaluated across multiple generations
-Each generation keeps the best performers and breeds new designs from them
-Fitness is scored using Barrowman equations for stability and a physics model for apogee
+VISION
+------
+LaunchPad is a desktop rocket-design optimizer. The user defines a set of
+constraints (target altitude, max body diameter, motor class, stability margin)
+and the application automatically generates and evolves hundreds of rocket
+designs using a Genetic Algorithm (GA). Instead of designing one rocket by hand
+in OpenRocket, LaunchPad does the exploring for you.
 
-What the user sees
+How the GA will work:
+  - Each rocket's dimensions become a "genome" (body diameter, length, fin span,
+    nose cone shape, etc.).
+  - Hundreds of candidate rockets are evaluated across multiple generations.
+  - Each generation keeps the best performers and breeds new designs.
+  - Fitness is scored with Barrowman equations for stability and a physics model
+    for apogee prediction.
 
-A clean input dashboard to set their constraints
-A gallery of the top optimized rocket candidates
-Each card shows stats (apogee, stability, diameter, motor)
-The user picks the one they want to build
-Eventually exports to a buildable format
+What the finished product will look like:
+  - A clean input dashboard where the user sets constraints.
+  - A gallery of top-ranked rocket candidates after optimization.
+  - Each card shows key stats (apogee, stability, diameter, motor).
+  - The user picks a favorite and eventually exports it to a buildable format.
 
-The goal
-A portfolio-level project bridging aerospace physics, evolutionary computing, and interactive 3D graphics — all running fully offline on the user's device.
+The long-term goal is a portfolio-level project bridging aerospace physics,
+evolutionary computing, and interactive 3D graphics -- all running fully
+offline on the user's device.
 
-Instructions:
-	After every time you change the code always edit this context.txt file with the
-	current state of the program, and goals for next time. NEVER USE EMOJI's in this
-	it looks extremely un porfesstional.
-	
-Current state. 
-We have an intro screen. With a rotatating rocket that says projects.
-The screen takes you to projects screen which currently has create
-new project button and a label with a instatiated top bar
-top bar has the settings, and our rocket Icon which takes us back
-to the projects screen currently.
 
-Our next goals will be:
-	1. Fix the 7 errors we currently have
-	2. Fix the intro screen looking unprofessonal
-	3. Add functioanlty to the program.
-	
+TECH STACK
+----------
+Engine   : Godot 4.5 (Forward+, Vulkan)
+Language : GDScript
+Target   : Windows desktop (single .exe export planned)
+Fonts    : BrunoAce (titles), Rajdhani (UI/body text)
+		   Also bundled but not yet used: Barlow, Exo, OpenSans, Quantico,
+		   TitilliumWeb
+General Theme    : Dark background, with gray pannels, slighty liter than bg,off white text, and  small orange accentt (dont over use. )
+
+
+FOLDER STRUCTURE
+----------------
+launch-pad/
+  project.godot           -- Engine config, main scene = ProjectScreen.tscn
+  export_presets.cfg       -- Web export preset (placeholder)
+  documents/
+	context.txt            -- This file
+  objects/
+	cylinder.obj           -- 3D rocket body mesh
+	fins.obj               -- 3D rocket fin mesh
+	nose.obj               -- 3D nose cone mesh
+  scenes/
+	ProjectScreen.tscn     -- Main scene: top bar + project grid/empty state
+	project_card.tscn      -- Reusable card showing one project's info
+    rocket.tscn            -- 3D rocket model with Label3D text on body
+    top_bar.tscn           -- Menu bar (File/Edit/View/Help) + rocket logo
+  scripts/
+    project_screen.gd      -- Drives ProjectScreen: new/delete/refresh logic
+    project_manager.gd     -- Autoload singleton: CRUD for .lpad JSON files
+    project_data.gd        -- ProjectData Resource class (the data model)
+	project_card.gd        -- Sets up a card's labels from a ProjectData
+	top_bar.gd             -- Menu item handlers, home-button navigation
+	rocket.gd              -- Spins the 3D rocket, sets Label3D text via export
+  ui/
+	fonts/                 -- .ttf font files
+	images/                -- (empty, reserved for future assets)
+	themes/
+	  BrunoAce.tres        -- Theme resource for title font
+	  Rajdhani.tres        -- Main UI theme resource
+
+
+CURRENT STATE (as of 2026-05-19)
+---------------------------------
+Screens built:
+  1. Project Screen (main scene)
+	 - Top bar with a small 3D rocket logo (says "Launch Pad"), menu bar
+	   (File, Edit, View, Help), and a home button that navigates back here.
+	 - "Your Projects" header with a "+ New Project" button.
+	 - A scrollable grid of project cards (4 columns).
+	 - Empty state shown when no projects exist yet.
+
+  2. Project Cards
+	 - Dark styled PanelContainer cards (380x200 min).
+	 - Show project name, description, motor class, target altitude, and
+	   last-modified date.
+	 - Delete button with confirmation dialog.
+	 - Click a card to open its project (handler exists but is a TODO stub).
+
+  3. 3D Rocket
+	 - Built from three OBJ meshes (cylinder, fins, nose cone).
+	 - Four Label3D pairs (text + shadow) wrapped around the body, driven by
+	   an export variable "rocket_text".
+	 - Rotates via _process (rotation disabled in the top-bar logo instance to
+	   avoid an editor undo glitch).
+
+Data layer:
+  - ProjectManager autoload stores projects as .lpad JSON files in
+	user://projects/.
+  - ProjectData resource holds metadata (name, description, timestamps) and
+	constraint fields (target_altitude, max_diameter, motor_class,
+	stability_margin) plus GA result placeholders (generation_count,
+	population_size, top_candidates).
+  - Full CRUD: create, save, load, list (sorted by date), delete.
+
+Previous intro screen was removed because it looked more like a game start
+button than a professional engineering tool. The app now boots directly into
+the Project Screen.
+
+Known issues resolved:
+  - Node-not-found errors on %NameLabel / %DateLabel / etc. were fixed by
+	adding unique_name_in_owner to each label in project_card.tscn and using
+	an await-ready guard in project_card.gd.
+  - Editor undo glitch ("Condition !p_node->is_inside_tree() is true") was
+	fixed by removing the @tool annotation from rocket.gd.
+
+Top bar menus currently wired:
+  File  -> New Project (works), Open Project Folder (works), Exit (works)
+  Edit  -> Preferences (stub)
+  View  -> Reset Layout (stub)
+  Help  -> Documentation (stub), About LaunchPad (stub)
+
+
+NEXT GOALS
+----------
+  1. Populate and flesh out the top bar menus with more sub-items and
+	 functional handlers (some are still stubs).
+  2. Add the "LaunchPad" title label centered in the top bar using BrunoAce
+	 with a theme override for font size and shadow.
+  3. Build the Project Editor screen -- the view you see after clicking a
+	 project card, where the user sets constraints and eventually runs the GA.
+  4. Implement the constraint input form (target altitude, motor class,
+	 diameter, stability margin).
+  5. Begin work on the Genetic Algorithm engine (genome encoding, fitness
+	 evaluation with Barrowman equations, selection, crossover, mutation).
+  6. Add a 3D preview panel where the user can see the optimized rocket design
+	 rendered in real time.
+  7. Add window title-bar buttons (minimize, maximize, close) for the exported
+	 .exe, since Godot's borderless/embedded windows may not include them by
+     default.
+
+
+INSTRUCTIONS FOR AI ASSISTANTS
+-------------------------------
+  - After every code change, update this context.txt with the current state and
+    goals. Keep it factual and professional.
+  - Never use emojis in this file.
+  - Keep the structure: Vision, Tech Stack, Folder Structure, Current State,
+    Next Goals.

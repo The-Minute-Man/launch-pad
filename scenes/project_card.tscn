@@ -47,13 +47,15 @@ layout_mode = 2
 [node name="TopRow" type="HBoxContainer" parent="VBox"]
 layout_mode = 2
 
-[node name="NameLabel" type="Label" parent="VBox/TopRow" unique_name_in_owner=true]
+[node name="NameLabel" type="Label" parent="VBox/TopRow"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 28
 text = "Project Name"
 
-[node name="DeleteButton" type="Button" parent="VBox/TopRow" unique_name_in_owner=true]
+[node name="DeleteButton" type="Button" parent="VBox/TopRow"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 theme_override_styles/normal = SubResource("StyleBoxFlat_delete")
@@ -65,7 +67,8 @@ text = "Delete"
 layout_mode = 2
 custom_minimum_size = Vector2(0, 4)
 
-[node name="DescLabel" type="Label" parent="VBox" unique_name_in_owner=true]
+[node name="DescLabel" type="Label" parent="VBox"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 theme_override_colors/font_color = Color(0.6, 0.6, 0.58, 1)
@@ -79,14 +82,16 @@ size_flags_vertical = 3
 [node name="BottomRow" type="HBoxContainer" parent="VBox"]
 layout_mode = 2
 
-[node name="MotorLabel" type="Label" parent="VBox/BottomRow" unique_name_in_owner=true]
+[node name="MotorLabel" type="Label" parent="VBox/BottomRow"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 16
 theme_override_colors/font_color = Color(0.75, 0.35, 0.05, 1)
 text = "Motor: C"
 
-[node name="AltitudeLabel" type="Label" parent="VBox/BottomRow" unique_name_in_owner=true]
+[node name="AltitudeLabel" type="Label" parent="VBox/BottomRow"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 16
@@ -94,7 +99,8 @@ theme_override_colors/font_color = Color(0.75, 0.35, 0.05, 1)
 text = "Alt: 1000m"
 horizontal_alignment = 2
 
-[node name="DateLabel" type="Label" parent="VBox/BottomRow" unique_name_in_owner=true]
+[node name="DateLabel" type="Label" parent="VBox/BottomRow"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
 theme_override_colors/font_color = Color(0.5, 0.5, 0.48, 1)
