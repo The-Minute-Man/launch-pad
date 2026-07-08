@@ -14,57 +14,17 @@ func _ready() -> void:
 ## ── Project CRUD ──
 
 func _on_new_project() -> void:
-	var dialog := AcceptDialog.new()
-	dialog.title = "New Project"
-	dialog.dialog_text = ""
-	dialog.min_size = Vector2i(500, 220)
-
-	var vbox := VBoxContainer.new()
-	vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
-
-	var name_label := Label.new()
-	name_label.text = "Project Name"
-	vbox.add_child(name_label)
-
-	var name_input := LineEdit.new()
-	name_input.placeholder_text = "My Rocket Design"
-	name_input.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	vbox.add_child(name_input)
-
-	var spacer := Control.new()
-	spacer.custom_minimum_size.y = 8
-	vbox.add_child(spacer)
-
-	var desc_label := Label.new()
-	desc_label.text = "Description (optional)"
-	vbox.add_child(desc_label)
-
-	var desc_input := LineEdit.new()
-	desc_input.placeholder_text = "A brief description..."
-	desc_input.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	vbox.add_child(desc_input)
-
-	dialog.add_child(vbox)
-	dialog.get_ok_button().text = "Create"
-	dialog.add_cancel_button("Cancel")
-
+	var dialog_scene := preload("res://scenes/new_project_dialog.tscn")
+	var dialog := dialog_scene.instantiate()
 	add_child(dialog)
-	dialog.popup_centered()
-
-	# Focus the name input
-	name_input.grab_focus()
-
-	dialog.confirmed.connect(func():
-		var pname := name_input.text.strip_edges()
-		if pname == "":
-			pname = "Untitled Project"
-		ProjectManager.create_project(pname, desc_input.text.strip_edges())
+	dialog.project_created.connect(func():
 		_refresh_projects()
-		dialog.queue_free()
 	)
-	dialog.canceled.connect(func():
-		dialog.queue_free()
+	dialog.visibility_changed.connect(func():
+		if not dialog.visible:
+			dialog.queue_free()
 	)
+	dialog.popup_centered()
 
 func _on_delete_requested(file_path: String) -> void:
 	var confirm := ConfirmationDialog.new()

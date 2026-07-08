@@ -38,7 +38,7 @@ Target   : Windows desktop (single .exe export planned)
 Fonts    : BrunoAce (titles), Rajdhani (UI/body text)
 		   Also bundled but not yet used: Barlow, Exo, OpenSans, Quantico,
 		   TitilliumWeb
-General Theme    : Dark background, with gray pannels, slighty liter than bg,off white text, and  small orange accentt (dont over use. )
+General Theme    : Dark background, with gray pannels, slighty lighter than bg,off white text, and  small orange accent (not used yet incquire before using this )
 
 
 FOLDER STRUCTURE
@@ -145,7 +145,7 @@ NEXT GOALS
 INSTRUCTIONS FOR AI ASSISTANTS
 -------------------------------
   - After every code change, update this context.txt with the current state and
-    goals. Keep it factual and professional.
+    goals. Keep it factual and professional. (only update it if it is accually nesacery.)
   - Never use emojis in this file.
   - Keep the structure: Vision, Tech Stack, Folder Structure, Current State,
     Next Goals.

@@ -1,14 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://b5xocivocnbc4"]
+[gd_scene load_steps=8 format=3 uid="uid://b5xocivocnbc4"]
 
 [ext_resource type="Script" uid="uid://6xojgphhss6m" path="res://scripts/top_bar.gd" id="1_script"]
-[ext_resource type="PackedScene" uid="uid://dy2pfkqfm5d0h" path="res://scenes/rocket.tscn" id="2_rocket"]
+[ext_resource type="Texture2D" uid="uid://bjw8ajxldw00t" path="res://ui/images/home.svg" id="2_home"]
 [ext_resource type="Theme" uid="uid://dgihhedsjca4b" path="res://ui/themes/Rajdhani.tres" id="3_theme"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
 bg_color = Color(0.18, 0.18, 0.17, 1)
-
-[sub_resource type="ViewportTexture" id="ViewportTexture_rocket"]
-viewport_path = NodePath("SubViewport")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_menu"]
 
@@ -44,9 +41,9 @@ layout_mode = 2
 theme_override_constants/margin_left = 8
 
 [node name="LogoRect" type="TextureRect" parent="VBox/HBox/LogoMargin"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
-texture = SubResource("ViewportTexture_rocket")
+texture = ExtResource("2_home")
 expand_mode = 1
 stretch_mode = 5
 
@@ -71,54 +68,84 @@ theme_override_font_sizes/font_size = 20
 flat = true
 
 [node name="File" type="PopupMenu" parent="VBox/HBox/MenuBar"]
-item_count = 4
+item_count = 9
 item_0/text = "New Project"
 item_0/id = 0
-item_1/text = "Open Project Folder"
-item_1/id = 1
-item_2/id = 2
-item_2/separator = true
-item_3/text = "Exit"
-item_3/id = 3
+item_1/text = "Open Project..."
+item_1/id = 10
+item_2/text = "Save Project"
+item_2/id = 11
+item_3/text = "Save Project As..."
+item_3/id = 12
+item_4/id = 14
+item_4/separator = true
+item_5/text = "Open Project Folder"
+item_5/id = 1
+item_6/text = "Export Design..."
+item_6/id = 13
+item_7/id = 15
+item_7/separator = true
+item_8/text = "Exit"
+item_8/id = 3
 
 [node name="Edit" type="PopupMenu" parent="VBox/HBox/MenuBar"]
-item_count = 1
-item_0/text = "Preferences"
-item_0/id = 0
+item_count = 10
+item_0/text = "Undo"
+item_0/id = 10
+item_1/text = "Redo"
+item_1/id = 11
+item_2/id = 12
+item_2/separator = true
+item_3/text = "Cut"
+item_3/id = 13
+item_4/text = "Copy"
+item_4/id = 14
+item_5/text = "Paste"
+item_5/id = 15
+item_6/text = "Delete"
+item_6/id = 16
+item_7/id = 17
+item_7/separator = true
+item_8/text = "Project Settings..."
+item_8/id = 18
+item_9/text = "Preferences"
+item_9/id = 0
 
 [node name="View" type="PopupMenu" parent="VBox/HBox/MenuBar"]
-item_count = 1
-item_0/text = "Reset Layout"
-item_0/id = 0
+item_count = 6
+item_0/text = "Toggle Sidebar"
+item_0/id = 10
+item_1/text = "Toggle 3D Preview Grid"
+item_1/id = 11
+item_2/text = "Zoom In"
+item_2/id = 12
+item_3/text = "Zoom Out"
+item_3/id = 13
+item_4/id = 14
+item_4/separator = true
+item_5/text = "Reset Layout"
+item_5/id = 0
 
 [node name="Help" type="PopupMenu" parent="VBox/HBox/MenuBar"]
-item_count = 2
+item_count = 7
 item_0/text = "Documentation"
 item_0/id = 0
-item_1/text = "About LaunchPad"
-item_1/id = 1
+item_1/text = "Getting Started Tutorial"
+item_1/id = 10
+item_2/text = "Physics Reference"
+item_2/id = 11
+item_3/text = "Report a Bug"
+item_3/id = 12
+item_4/id = 13
+item_4/separator = true
+item_5/text = "Check for Updates..."
+item_5/id = 14
+item_6/text = "About LaunchPad"
+item_6/id = 1
 
 [node name="MenuSeparator" type="HSeparator" parent="VBox"]
 layout_mode = 2
 theme_override_constants/separation = 1
 theme_override_styles/separator = SubResource("StyleBoxLine_sep")
-
-[node name="SubViewport" type="SubViewport" parent="."]
-transparent_bg = true
-handle_input_locally = false
-msaa_3d = 3
-size = Vector2i(256, 256)
-render_target_update_mode = 4
-
-[node name="Camera3D" type="Camera3D" parent="SubViewport"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.5)
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="SubViewport"]
-transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 0, 5, 0)
-
-[node name="Rocket" parent="SubViewport" instance=ExtResource("2_rocket")]
-transform = Transform3D(0.28284, 0.28284, 0, -0.28284, 0.28284, 0, 0, 0, 0.4, 0, 0, 0)
-rocket_text = "Launch Pad"
-is_rotating = false
 
 [connection signal="pressed" from="VBox/HBox/LogoMargin/HomeButton" to="." method="_on_home_button_pressed"]
