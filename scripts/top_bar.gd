@@ -3,6 +3,16 @@ extends PanelContainer
 
 signal new_project_requested
 
+@onready var file_menu: PopupMenu = $VBox/HBox/MenuBar/File
+@onready var project_title: Label = %ProjectTitle
+
+func set_project_title(title: String) -> void:
+	if is_node_ready():
+		project_title.text = title
+	else:
+		await ready
+		project_title.text = title
+
 func _ready() -> void:
 	# Ensure signals are connected to this script
 	if has_node("VBox/HBox/MenuBar/File"):
@@ -15,8 +25,8 @@ func _ready() -> void:
 		$"VBox/HBox/MenuBar/Help".id_pressed.connect(_on_help_id_pressed)
 
 func _on_home_button_pressed() -> void:
-	if get_tree().current_scene.scene_file_path != "res://scenes/ProjectScreen.tscn":
-		get_tree().change_scene_to_file("res://scenes/ProjectScreen.tscn")
+	if get_tree().current_scene.scene_file_path != "res://scenes/project_screen.tscn":
+		get_tree().change_scene_to_file("res://scenes/project_screen.tscn")
 
 func _on_file_id_pressed(id: int) -> void:
 	match id:

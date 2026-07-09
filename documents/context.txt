@@ -44,7 +44,7 @@ General Theme    : Dark background, with gray pannels, slighty lighter than bg,o
 FOLDER STRUCTURE
 ----------------
 launch-pad/
-  project.godot           -- Engine config, main scene = ProjectScreen.tscn
+  project.godot           -- Engine config, main scene = project_screen.tscn
   export_presets.cfg       -- Web export preset (placeholder)
   documents/
 	context.txt            -- This file
@@ -53,7 +53,7 @@ launch-pad/
 	fins.obj               -- 3D rocket fin mesh
 	nose.obj               -- 3D nose cone mesh
   scenes/
-	ProjectScreen.tscn     -- Main scene: top bar + project grid/empty state
+	project_screen.tscn    -- Main scene: top bar + project grid/empty state
 	project_card.tscn      -- Reusable card showing one project's info
     rocket.tscn            -- 3D rocket model with Label3D text on body
     top_bar.tscn           -- Menu bar (File/Edit/View/Help) + rocket logo

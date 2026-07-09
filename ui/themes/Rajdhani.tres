@@ -966,3 +966,6 @@ Tree/styles/selected_focus = SubResource("StyleBoxFlat_a4lkx")
 Tree/styles/title_button_hover = SubResource("StyleBoxFlat_s42t3")
 Tree/styles/title_button_normal = SubResource("StyleBoxFlat_hb5xr")
 Tree/styles/title_button_pressed = SubResource("StyleBoxFlat_j7f66")
+
+TooltipLabel/font_sizes/font_size = 18
+TooltipLabel/fonts/font = ExtResource("1_eoogs")

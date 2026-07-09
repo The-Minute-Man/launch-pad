@@ -1,0 +1,121 @@
+[gd_scene load_steps=5 format=3 uid="uid://c1oimjv8f5tvc"]
+
+[ext_resource type="Theme" uid="uid://dgihhedsjca4b" path="res://ui/themes/Rajdhani.tres" id="1_3dy8e"]
+[ext_resource type="Script" uid="uid://bnw8fsmtcqxv7" path="res://scripts/project_screen.gd" id="2_0w8jq"]
+[ext_resource type="PackedScene" uid="uid://b5xocivocnbc4" path="res://scenes/top_bar.tscn" id="3_gt7j4"]
+[ext_resource type="FontFile" uid="uid://bs8kq6nwr55l6" path="res://ui/fonts/BrunoAce.ttf" id="4_uvywc"]
+[ext_resource type="PackedScene" uid="uid://c5q3sidebaruid" path="res://scenes/side_bar.tscn" id="5_side_bar"]
+
+[node name="project_screen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_3dy8e")
+script = ExtResource("2_0w8jq")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.121569, 0.121569, 0.117647, 1)
+
+[node name="VBoxLayout" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TopBar" parent="VBoxLayout" instance=ExtResource("3_gt7j4")]
+layout_mode = 2
+
+[node name="HBoxLayout" type="HBoxContainer" parent="VBoxLayout"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+
+[node name="SideBar" parent="VBoxLayout/HBoxLayout" instance=ExtResource("5_side_bar")]
+layout_mode = 2
+
+[node name="ContentMargin" type="MarginContainer" parent="VBoxLayout/HBoxLayout"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 60
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 60
+theme_override_constants/margin_bottom = 30
+
+[node name="ContentVBox" type="VBoxContainer" parent="VBoxLayout/HBoxLayout/ContentMargin"]
+layout_mode = 2
+
+[node name="HeaderRow" type="HBoxContainer" parent="VBoxLayout/HBoxLayout/ContentMargin/ContentVBox"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="VBoxLayout/HBoxLayout/ContentMargin/ContentVBox/HeaderRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("4_uvywc")
+theme_override_font_sizes/font_size = 48
+text = "Your Projects"
+
+[node name="NewProjectButton" type="Button" parent="VBoxLayout/HBoxLayout/ContentMargin/ContentVBox/HeaderRow"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "+ New Project"
+
+[node name="Spacer" type="Control" parent="VBoxLayout/HBoxLayout/ContentMargin/ContentVBox"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxLayout/HBoxLayout/ContentMargin/ContentVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="ProjectGrid" type="GridContainer" parent="VBoxLayout/HBoxLayout/ContentMargin/ContentVBox/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = 20
+columns = 4
+
+[node name="EmptyState" type="CenterContainer" parent="VBoxLayout/HBoxLayout/ContentMargin/ContentVBox"]
+visible = false
+custom_minimum_size = Vector2(0, 400)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="EmptyVBox" type="VBoxContainer" parent="VBoxLayout/HBoxLayout/ContentMargin/ContentVBox/EmptyState"]
+layout_mode = 2
+
+[node name="EmptyIcon" type="Label" parent="VBoxLayout/HBoxLayout/ContentMargin/ContentVBox/EmptyState/EmptyVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.4, 0.38, 1)
+theme_override_font_sizes/font_size = 64
+text = "—"
+horizontal_alignment = 1
+
+[node name="EmptyLabel" type="Label" parent="VBoxLayout/HBoxLayout/ContentMargin/ContentVBox/EmptyState/EmptyVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5, 0.5, 0.48, 1)
+theme_override_font_sizes/font_size = 28
+text = "No projects yet"
+horizontal_alignment = 1
+
+[node name="EmptySubLabel" type="Label" parent="VBoxLayout/HBoxLayout/ContentMargin/ContentVBox/EmptyState/EmptyVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.4, 0.38, 1)
+theme_override_font_sizes/font_size = 18
+text = "Click '+ New Project' to get started"
+horizontal_alignment = 1
+
+[connection signal="new_project_requested" from="VBoxLayout/TopBar" to="." method="_on_new_project"]

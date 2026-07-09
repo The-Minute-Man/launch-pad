@@ -1,11 +1,13 @@
 extends Control
 ## Main ProjectScreen — lists all .lpad projects with a menu bar and project grid.
 
-@onready var project_grid: GridContainer = $VBoxLayout/ContentMargin/ContentVBox/ScrollContainer/ProjectGrid
-@onready var empty_state: CenterContainer = $VBoxLayout/ContentMargin/ContentVBox/EmptyState
-@onready var new_project_btn: Button = $VBoxLayout/ContentMargin/ContentVBox/HeaderRow/NewProjectButton
+@onready var project_grid: GridContainer = $VBoxLayout/HBoxLayout/ContentMargin/ContentVBox/ScrollContainer/ProjectGrid
+@onready var empty_state: CenterContainer = $VBoxLayout/HBoxLayout/ContentMargin/ContentVBox/EmptyState
+@onready var new_project_btn: Button = $VBoxLayout/HBoxLayout/ContentMargin/ContentVBox/HeaderRow/NewProjectButton
+@onready var side_bar: PanelContainer = $VBoxLayout/HBoxLayout/SideBar
 
 func _ready() -> void:
+	side_bar.set_mode("home")
 	new_project_btn.pressed.connect(_on_new_project)
 	_refresh_projects()
 
@@ -20,33 +22,23 @@ func _on_new_project() -> void:
 	dialog.project_created.connect(func():
 		_refresh_projects()
 	)
-	dialog.visibility_changed.connect(func():
-		if not dialog.visible:
-			dialog.queue_free()
-	)
-	dialog.popup_centered()
 
 func _on_delete_requested(file_path: String) -> void:
-	var confirm := ConfirmationDialog.new()
-	confirm.dialog_text = "Are you sure you want to delete this project?\nThis action cannot be undone."
-	confirm.title = "Delete Project"
-	confirm.min_size = Vector2i(400, 150)
-	confirm.get_ok_button().text = "Delete"
-	add_child(confirm)
-	confirm.popup_centered()
-
-	confirm.confirmed.connect(func():
-		ProjectManager.delete_project(file_path)
+	var dialog_scene := preload("res://scenes/delete_project_dialog.tscn")
+	var dialog := dialog_scene.instantiate()
+	dialog.setup(file_path)
+	add_child(dialog)
+	dialog.project_deleted.connect(func():
 		_refresh_projects()
-		confirm.queue_free()
-	)
-	confirm.canceled.connect(func():
-		confirm.queue_free()
 	)
 
 func _on_card_clicked(file_path: String) -> void:
-	# TODO: Open the project editor screen
-	print("Opening project: ", file_path)
+	var editor_scene := preload("res://scenes/project_editor_screen.tscn").instantiate()
+	editor_scene.setup(file_path)
+	
+	get_tree().root.add_child(editor_scene)
+	get_tree().current_scene.queue_free()
+	get_tree().current_scene = editor_scene
 
 ## ── Refresh Grid ──
 

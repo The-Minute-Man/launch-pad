@@ -1,0 +1,124 @@
+[gd_scene load_steps=12 format=3 uid="uid://c5q3sidebaruid"]
+
+[ext_resource type="Theme" uid="uid://dgihhedsjca4b" path="res://ui/themes/Rajdhani.tres" id="1_theme"]
+[ext_resource type="Script" path="res://scripts/side_bar.gd" id="2_script"]
+[ext_resource type="Texture2D" uid="uid://bjw8ajxldw00t" path="res://ui/icons/home.svg" id="3_home"]
+[ext_resource type="Texture2D" path="res://ui/icons/recent.svg" id="4_recent"]
+[ext_resource type="Texture2D" path="res://ui/icons/trash.svg" id="5_trash"]
+[ext_resource type="Texture2D" path="res://ui/icons/componts.svg" id="6_components"]
+[ext_resource type="Texture2D" path="res://ui/icons/cone.svg" id="7_cone"]
+[ext_resource type="Texture2D" path="res://ui/icons/data.svg" id="8_data"]
+[ext_resource type="Texture2D" path="res://ui/icons/export.svg" id="9_export"]
+[ext_resource type="Texture2D" path="res://ui/icons/settings.svg" id="10_settings"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
+bg_color = Color(0.15, 0.15, 0.14, 1)
+border_width_right = 1
+border_color = Color(0.25, 0.25, 0.24, 1)
+
+[node name="SideBar" type="PanelContainer"]
+custom_minimum_size = Vector2(80, 0)
+anchors_preset = 9
+anchor_bottom = 1.0
+grow_vertical = 2
+theme = ExtResource("1_theme")
+theme_override_styles/panel = SubResource("StyleBoxFlat_bg")
+script = ExtResource("2_script")
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 24
+
+[node name="VBox" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="HomeTools" type="VBoxContainer" parent="Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="AllProjectsBtn" type="Button" parent="Margin/VBox/HomeTools"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+tooltip_text = "All Projects"
+flat = true
+icon = ExtResource("3_home")
+icon_alignment = 1
+expand_icon = true
+
+[node name="RecentBtn" type="Button" parent="Margin/VBox/HomeTools"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+tooltip_text = "Recent"
+flat = true
+icon = ExtResource("4_recent")
+icon_alignment = 1
+expand_icon = true
+
+[node name="TrashBtn" type="Button" parent="Margin/VBox/HomeTools"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+tooltip_text = "Trash"
+flat = true
+icon = ExtResource("5_trash")
+icon_alignment = 1
+expand_icon = true
+
+[node name="EditorTools" type="VBoxContainer" parent="Margin/VBox"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="ComponentsBtn" type="Button" parent="Margin/VBox/EditorTools"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+tooltip_text = "Components"
+flat = true
+icon = ExtResource("6_components")
+icon_alignment = 1
+expand_icon = true
+
+[node name="SimulationsBtn" type="Button" parent="Margin/VBox/EditorTools"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+tooltip_text = "Simulations"
+flat = true
+icon = ExtResource("7_cone")
+icon_alignment = 1
+expand_icon = true
+
+[node name="FlightDataBtn" type="Button" parent="Margin/VBox/EditorTools"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+tooltip_text = "Flight Data"
+flat = true
+icon = ExtResource("8_data")
+icon_alignment = 1
+expand_icon = true
+
+[node name="ExportBtn" type="Button" parent="Margin/VBox/EditorTools"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+tooltip_text = "Export Design"
+flat = true
+icon = ExtResource("9_export")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Spacer" type="Control" parent="Margin/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SettingsBtn" type="Button" parent="Margin/VBox"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+tooltip_text = "Settings"
+flat = true
+icon = ExtResource("10_settings")
+icon_alignment = 1
+expand_icon = true

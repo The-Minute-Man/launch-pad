@@ -1,0 +1,72 @@
+[gd_scene load_steps=5 format=3 uid="uid://h3x3pw8st7dd"]
+
+[ext_resource type="Theme" uid="uid://dgihhedsjca4b" path="res://ui/themes/Rajdhani.tres" id="1_theme"]
+[ext_resource type="Script" path="res://scripts/project_editor_screen.gd" id="2_script"]
+[ext_resource type="PackedScene" uid="uid://b5xocivocnbc4" path="res://scenes/top_bar.tscn" id="3_top_bar"]
+[ext_resource type="FontFile" uid="uid://bs8kq6nwr55l6" path="res://ui/fonts/BrunoAce.ttf" id="4_font"]
+[ext_resource type="PackedScene" uid="uid://c5q3sidebaruid" path="res://scenes/side_bar.tscn" id="5_side_bar"]
+
+[node name="ProjectEditorScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+script = ExtResource("2_script")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.121569, 0.121569, 0.117647, 1)
+
+[node name="VBoxLayout" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TopBar" parent="VBoxLayout" instance=ExtResource("3_top_bar")]
+layout_mode = 2
+
+[node name="HBoxLayout" type="HBoxContainer" parent="VBoxLayout"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+
+[node name="SideBar" parent="VBoxLayout/HBoxLayout" instance=ExtResource("5_side_bar")]
+layout_mode = 2
+
+[node name="ContentMargin" type="MarginContainer" parent="VBoxLayout/HBoxLayout"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 60
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 60
+theme_override_constants/margin_bottom = 30
+
+[node name="ContentVBox" type="VBoxContainer" parent="VBoxLayout/HBoxLayout/ContentMargin"]
+layout_mode = 2
+
+[node name="MainEditorArea" type="Control" parent="VBoxLayout/HBoxLayout/ContentMargin/ContentVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PlaceholderLabel" type="Label" parent="VBoxLayout/HBoxLayout/ContentMargin/ContentVBox/MainEditorArea"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 32
+text = "Rocket Editor / Dashboard goes here..."
+horizontal_alignment = 1
+vertical_alignment = 1

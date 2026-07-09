@@ -15,7 +15,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 [application]
 
 config/name="LaunchPad"
-run/main_scene="uid://btt61hejsbc00"
+run/main_scene="uid://c1oimjv8f5tvc"
 config/features=PackedStringArray("4.5", "Forward Plus")
 boot_splash/bg_color=Color(0.121569, 0.121569, 0.117647, 1)
 boot_splash/show_image=false

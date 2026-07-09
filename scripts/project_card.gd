@@ -22,8 +22,15 @@ func setup(data: ProjectData) -> void:
 
 	name_label.text = data.project_name
 	desc_label.text = data.description if data.description != "" else "No description"
-	motor_label.text = "Motor: " + data.motor_class
-	altitude_label.text = "Alt: " + str(int(data.target_altitude)) + "m"
+	if data.motor_class == "":
+		motor_label.text = "Motor: --"
+	else:
+		motor_label.text = "Motor: " + data.motor_class
+		
+	if data.target_altitude <= 0:
+		altitude_label.text = "Alt: --"
+	else:
+		altitude_label.text = "Alt: " + str(int(data.target_altitude)) + "m"
 
 	# Format date nicely
 	if data.modified_at != "":

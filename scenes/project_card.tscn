@@ -2,6 +2,7 @@
 
 [ext_resource type="Theme" uid="uid://dgihhedsjca4b" path="res://ui/themes/Rajdhani.tres" id="1_theme"]
 [ext_resource type="Script" path="res://scripts/project_card.gd" id="2_script"]
+[ext_resource type="Texture2D" uid="uid://diapmmgvougul" path="res://ui/icons/trash.svg" id="3_trash"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
 content_margin_left = 20.0
@@ -20,9 +21,9 @@ corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_delete"]
-content_margin_left = 12.0
+content_margin_left = 6.0
 content_margin_top = 6.0
-content_margin_right = 12.0
+content_margin_right = 6.0
 content_margin_bottom = 6.0
 bg_color = Color(0.3, 0.08, 0.08, 1)
 border_width_left = 1
@@ -57,11 +58,14 @@ text = "Project Name"
 [node name="DeleteButton" type="Button" parent="VBox/TopRow"]
 unique_name_in_owner = true
 layout_mode = 2
+custom_minimum_size = Vector2(32, 32)
 theme_override_font_sizes/font_size = 18
 theme_override_styles/normal = SubResource("StyleBoxFlat_delete")
 theme_override_styles/hover = SubResource("StyleBoxFlat_delete")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_delete")
-text = "Delete"
+icon = ExtResource("3_trash")
+icon_alignment = 1
+expand_icon = true
 
 [node name="Spacer1" type="Control" parent="VBox"]
 layout_mode = 2
@@ -88,7 +92,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 16
 theme_override_colors/font_color = Color(0.75, 0.35, 0.05, 1)
-text = "Motor: C"
+text = "Motor: --"
 
 [node name="AltitudeLabel" type="Label" parent="VBox/BottomRow"]
 unique_name_in_owner = true
@@ -96,7 +100,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 16
 theme_override_colors/font_color = Color(0.75, 0.35, 0.05, 1)
-text = "Alt: 1000m"
+text = "Alt: --"
 horizontal_alignment = 2
 
 [node name="DateLabel" type="Label" parent="VBox/BottomRow"]

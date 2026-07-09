@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://b5xocivocnbc4"]
 
 [ext_resource type="Script" uid="uid://6xojgphhss6m" path="res://scripts/top_bar.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://bjw8ajxldw00t" path="res://ui/images/home.svg" id="2_home"]
+[ext_resource type="Texture2D" uid="uid://bjw8ajxldw00t" path="res://ui/icons/home.svg" id="2_home"]
 [ext_resource type="Theme" uid="uid://dgihhedsjca4b" path="res://ui/themes/Rajdhani.tres" id="3_theme"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
@@ -142,6 +142,24 @@ item_5/text = "Check for Updates..."
 item_5/id = 14
 item_6/text = "About LaunchPad"
 item_6/id = 1
+
+[node name="TitleSeparator" type="VSeparator" parent="VBox/HBox"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_vsep")
+
+[node name="ProjectTitle" type="Label" parent="VBox/HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.7, 0.7, 0.68, 1)
+text = "LaunchPad"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="RightMargin" type="Control" parent="VBox/HBox"]
+custom_minimum_size = Vector2(8, 0)
+layout_mode = 2
 
 [node name="MenuSeparator" type="HSeparator" parent="VBox"]
 layout_mode = 2
