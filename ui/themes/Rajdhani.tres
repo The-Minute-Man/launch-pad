@@ -895,6 +895,8 @@ TextEdit/icons/tab = SubResource("DPITexture_x4kd3")
 TextEdit/styles/focus = SubResource("StyleBoxFlat_6sivf")
 TextEdit/styles/normal = SubResource("StyleBoxFlat_fktrc")
 TextEdit/styles/read_only = SubResource("StyleBoxFlat_xl2fr")
+TooltipLabel/font_sizes/font_size = 18
+TooltipLabel/fonts/font = ExtResource("1_eoogs")
 Tree/colors/children_hl_line_color = Color(0.27, 0.27, 0.27, 1)
 Tree/colors/custom_button_font_highlight = Color(0.95, 0.95, 0.95, 1)
 Tree/colors/drop_position_color = Color(1, 1, 1, 1)
@@ -966,6 +968,3 @@ Tree/styles/selected_focus = SubResource("StyleBoxFlat_a4lkx")
 Tree/styles/title_button_hover = SubResource("StyleBoxFlat_s42t3")
 Tree/styles/title_button_normal = SubResource("StyleBoxFlat_hb5xr")
 Tree/styles/title_button_pressed = SubResource("StyleBoxFlat_j7f66")
-
-TooltipLabel/font_sizes/font_size = 18
-TooltipLabel/fonts/font = ExtResource("1_eoogs")
