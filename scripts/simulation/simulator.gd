@@ -2,20 +2,20 @@ class_name Simulator
 extends RefCounted
 
 # Runs a full flight simulation and returns the max altitude (apogee)
-static func run_simulation() -> float:
+static func run_simulation(sim_data: Dictionary) -> float:
 	var env = FlightEnvironment.new()
 	
 	# Initial State Setup
 	var state = FlightState.new()
-	state.mass = 0.5 # 500g rocket
-	state.cg = 0.5   # CG is 50cm from nose
-	state.inertia_longitudinal = 0.05
-	state.inertia_rotational = 0.005
+	state.mass = sim_data["mass"]
+	state.cg = sim_data["cg"]
+	state.inertia_longitudinal = sim_data["inertia_longitudinal"]
+	state.inertia_rotational = sim_data["inertia_rotational"]
 	
 	# Rocket geometry assumptions
-	var ref_area = PI * pow(0.02, 2) # 4cm diameter
-	var ref_length = 0.04
-	var rocket_length = 1.0
+	var ref_area = sim_data["ref_area"]
+	var ref_length = sim_data["ref_length"]
+	var rocket_length = sim_data["rocket_length"]
 	
 	# Point the rocket Straight UP!
 	# In OpenRocket body frame, nose is +Z. In Godot global frame, Up is +Y.
@@ -27,16 +27,18 @@ static func run_simulation() -> float:
 	var apogee = 0.0
 	var launch_rod_length = 2.0
 	
-	# Thrust profile (Dummy motor: 20N for 2 seconds)
-	var motor_burn_time = 2.0
-	var motor_thrust = 20.0
+	var motor: RocketMotor = sim_data.get("motor", null)
 	
 	print("--- Simulation Started ---")
 	
 	while state.position.y >= 0.0 and state.time < max_time:
 		var current_thrust = 0.0
-		if state.time < motor_burn_time:
-			current_thrust = motor_thrust
+		var motor_burn_time = 0.0
+		if motor != null:
+			current_thrust = motor.get_thrust_at_time(state.time)
+			motor_burn_time = motor.burn_time
+			# Dynamically update the rocket mass as propellant burns!
+			state.mass = (sim_data["mass"] - motor.total_mass) + motor.get_mass_at_time(state.time)
 			
 		# Step RK4
 		state = RK4Solver.step(state, env, dt, ref_area, ref_length, rocket_length, current_thrust)
