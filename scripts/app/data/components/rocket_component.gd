@@ -4,8 +4,11 @@ extends Resource
 @export var component_name: String = "Component"
 @export var material_name: String = "Cardboard"
 
-# Distance from the absolute tip of the rocket to the tip of this component
-@export var position_offset: float = 0.0 
+# The calculated absolute distance from the tip of the rocket to the tip of this component
+@export var global_position: float = 0.0 
+
+# User-defined offset relative to its auto-stacked position (e.g. sliding fins up a body tube)
+@export var relative_offset: float = 0.0
 
 # Optional user overrides
 @export var mass_override: float = -1.0
@@ -33,7 +36,7 @@ func get_local_cg() -> float:
 
 # Returns the global CG relative to the tip of the rocket
 func get_global_cg() -> float:
-	return position_offset + get_local_cg()
+	return global_position + get_local_cg()
 
 func get_surface_roughness() -> float:
 	return MaterialDB.get_roughness(material_name)

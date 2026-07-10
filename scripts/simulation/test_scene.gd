@@ -12,7 +12,6 @@ func _ready() -> void:
 	nose.length = 0.15
 	nose.base_diameter = 0.04
 	nose.wall_thickness = 0.002
-	nose.position_offset = 0.0
 	nose.material_name = "Plastic (Polystyrene)"
 	rocket.add_component(nose)
 	
@@ -21,7 +20,6 @@ func _ready() -> void:
 	body.length = 0.5
 	body.outer_diameter = 0.04
 	body.inner_diameter = 0.038
-	body.position_offset = 0.15 # Starts right after the nose cone
 	body.material_name = "Cardboard"
 	rocket.add_component(body)
 	
@@ -32,7 +30,6 @@ func _ready() -> void:
 	fins.tip_chord = 0.02
 	fins.span = 0.04
 	fins.thickness = 0.003
-	fins.position_offset = 0.6 # Attached near the bottom
 	fins.material_name = "Plywood"
 	fins.fin_cant_angle = 0.0 # EDGE CASE: Spin the rocket!
 	rocket.add_component(fins)
@@ -41,14 +38,12 @@ func _ready() -> void:
 	var motor_path = "res://scripts/app/data/databases/parts/motors/C6_5f4294d20002e900000004e7.eng"
 	var motor = MotorParser.parse_eng_file(motor_path)
 	if motor != null:
-		motor.position_offset = 0.65 - motor.length # Put motor at the very bottom
 		rocket.add_component(motor)
 		print("Loaded Motor: ", motor.component_name, " by ", motor.manufacturer)
 		
 	# 5. Recovery: Parachute
 	var chute = Parachute.new()
 	chute.diameter = 0.3 # 30cm (12 inch) parachute
-	chute.position_offset = 0.2 # Packed inside the body tube
 	rocket.add_component(chute)
 	
 	# Output the calculated stats

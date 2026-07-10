@@ -5,6 +5,27 @@ extends Resource
 
 func add_component(comp: RocketComponent) -> void:
 	components.append(comp)
+	update_auto_stacking()
+
+func update_auto_stacking() -> void:
+	var current_y = 0.0
+	var last_structural_length = 0.0
+	
+	for comp in components:
+		if comp is NoseCone or comp is BodyTube or comp is Transition:
+			comp.global_position = current_y + comp.relative_offset
+			if "length" in comp:
+				last_structural_length = comp.length
+				current_y += comp.length
+		elif comp is FinSet:
+			# FinSets stick to the bottom of the previous structural component by default
+			comp.global_position = current_y - comp.root_chord + comp.relative_offset
+		elif comp is RocketMotor:
+			# Stick motor to the bottom of the previous structural component
+			comp.global_position = current_y - comp.length + comp.relative_offset
+		elif comp is Parachute:
+			# Stick parachute inside the previous structural component
+			comp.global_position = current_y - (last_structural_length / 2.0) + comp.relative_offset
 
 func get_total_mass() -> float:
 	var total_mass = 0.0
@@ -46,7 +67,7 @@ func get_max_diameter() -> float:
 func get_total_length() -> float:
 	var max_len = 0.0
 	for comp in components:
-		var end_pos = comp.position_offset
+		var end_pos = comp.global_position
 		if comp is BodyTube:
 			end_pos += comp.length
 		elif comp is NoseCone:
@@ -115,7 +136,7 @@ func get_aerodynamics() -> Dictionary:
 			cp_local = comp.get_aerodynamic_cp()
 			
 		# Add global position offset to the local CP
-		var global_cp = comp.position_offset + cp_local
+		var global_cp = comp.global_position + cp_local
 		
 		total_cn_alpha += cn_a
 		weighted_cp_sum += (cn_a * global_cp)

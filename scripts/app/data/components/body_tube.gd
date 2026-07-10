@@ -11,7 +11,7 @@ func _init() -> void:
 
 func _calculate_mass() -> float:
 	var outer_radius = outer_diameter / 2.0
-	var inner_radius = inner_diameter / 2.0
+	var inner_radius = min(inner_diameter / 2.0, outer_radius - 0.0001)
 	
 	var volume = PI * length * (pow(outer_radius, 2) - pow(inner_radius, 2))
 	var density = MaterialDB.get_density(material_name)
