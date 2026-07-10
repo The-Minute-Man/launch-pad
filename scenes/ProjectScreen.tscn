@@ -2,7 +2,7 @@
 
 [ext_resource type="Theme" uid="uid://dgihhedsjca4b" path="res://ui/themes/Rajdhani.tres" id="1_theme"]
 [ext_resource type="FontFile" uid="uid://bs8kq6nwr55l6" path="res://ui/fonts/BrunoAce.ttf" id="2_brfont"]
-[ext_resource type="Script" uid="uid://bnw8fsmtcqxv7" path="res://scripts/project_screen.gd" id="3_script"]
+[ext_resource type="Script" uid="uid://bnw8fsmtcqxv7" path="res://scripts/app/ui/project_screen.gd" id="3_script"]
 [ext_resource type="PackedScene" uid="uid://b5xocivocnbc4" path="res://scenes/top_bar.tscn" id="4_topbar"]
 
 [node name="ProjectScreen" type="Control"]

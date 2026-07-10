@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://c1oimjv8f5tvc"]
 
 [ext_resource type="Theme" uid="uid://dgihhedsjca4b" path="res://ui/themes/Rajdhani.tres" id="1_3dy8e"]
-[ext_resource type="Script" uid="uid://bnw8fsmtcqxv7" path="res://scripts/project_screen.gd" id="2_0w8jq"]
+[ext_resource type="Script" uid="uid://bnw8fsmtcqxv7" path="res://scripts/app/ui/project_screen.gd" id="2_0w8jq"]
 [ext_resource type="PackedScene" uid="uid://b5xocivocnbc4" path="res://scenes/top_bar.tscn" id="3_gt7j4"]
 [ext_resource type="FontFile" uid="uid://bs8kq6nwr55l6" path="res://ui/fonts/BrunoAce.ttf" id="4_uvywc"]
 [ext_resource type="PackedScene" uid="uid://c5q3sidebaruid" path="res://scenes/side_bar.tscn" id="5_side_bar"]

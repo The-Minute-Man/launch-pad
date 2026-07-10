@@ -1,7 +1,7 @@
 [gd_scene load_steps=12 format=3 uid="uid://c5q3sidebaruid"]
 
 [ext_resource type="Theme" uid="uid://dgihhedsjca4b" path="res://ui/themes/Rajdhani.tres" id="1_theme"]
-[ext_resource type="Script" path="res://scripts/side_bar.gd" id="2_script"]
+[ext_resource type="Script" path="res://scripts/app/ui/side_bar.gd" id="2_script"]
 [ext_resource type="Texture2D" uid="uid://bjw8ajxldw00t" path="res://ui/icons/home.svg" id="3_home"]
 [ext_resource type="Texture2D" path="res://ui/icons/recent.svg" id="4_recent"]
 [ext_resource type="Texture2D" path="res://ui/icons/trashcan.svg" id="5_trash"]

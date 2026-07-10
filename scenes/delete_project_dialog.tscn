@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://dpsxdelete123"]
 
 [ext_resource type="Theme" uid="uid://dgihhedsjca4b" path="res://ui/themes/Rajdhani.tres" id="1_theme"]
-[ext_resource type="Script" path="res://scripts/delete_project_dialog.gd" id="2_script"]
+[ext_resource type="Script" path="res://scripts/app/ui/delete_project_dialog.gd" id="2_script"]
 [ext_resource type="Texture2D" uid="uid://diapmmgvougul" path="res://ui/icons/trash.svg" id="3_trash"]
 
 [node name="DeleteProjectDialog" type="ColorRect"]

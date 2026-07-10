@@ -22,7 +22,7 @@ boot_splash/show_image=false
 
 [autoload]
 
-ProjectManager="*res://scripts/project_manager.gd"
+ProjectManager="*res://scripts/app/data/project_manager.gd"
 
 [display]
 
@@ -39,6 +39,7 @@ folder_colors={
 "res://objects/": "orange",
 "res://scenes/": "yellow",
 "res://scripts/": "green",
+"res://scripts/app/": "green",
 "res://ui/": "blue"
 }
 

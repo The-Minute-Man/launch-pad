@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://b5xocivocnbc4"]
 
-[ext_resource type="Script" uid="uid://6xojgphhss6m" path="res://scripts/top_bar.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://6xojgphhss6m" path="res://scripts/app/ui/top_bar.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://bjw8ajxldw00t" path="res://ui/icons/home.svg" id="2_home"]
 [ext_resource type="Theme" uid="uid://dgihhedsjca4b" path="res://ui/themes/Rajdhani.tres" id="3_theme"]
 

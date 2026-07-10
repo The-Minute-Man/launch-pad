@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://cxab3p3fntf3g"]
 
 [ext_resource type="Theme" uid="uid://dgihhedsjca4b" path="res://ui/themes/Rajdhani.tres" id="1_theme"]
-[ext_resource type="Script" uid="uid://da4ldf0xb08jl" path="res://scripts/new_project_dialog.gd" id="2_script"]
+[ext_resource type="Script" uid="uid://da4ldf0xb08jl" path="res://scripts/app/ui/new_project_dialog.gd" id="2_script"]
 
 [node name="NewProjectDialog" type="ColorRect"]
 anchors_preset = 15
