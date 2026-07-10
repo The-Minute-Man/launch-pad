@@ -1,0 +1,95 @@
+# OpenRocket Simulation Engine: Complete Reverse-Engineered Blueprint
+
+This document contains the exact architectural logic, algorithms, and equations required to build a 1:1 replica of the OpenRocket model rocket flight simulator. 
+
+## 1. Core Simulation Architecture (RK4 & Quaternions)
+OpenRocket utilizes a 6-Degree of Freedom (6-DOF) flight simulation governed by Runge-Kutta 4 (RK4) numerical integration [3, 4].
+
+### The State Vector
+Your software must track the rocket's position, velocity, and orientation using a Quaternion to prevent gimbal lock [5, 6]. 
+The state vector `y` contains: `[x, y, z, vx, vy, vz, q_w, q_x, q_y, q_z, w_x, w_y, w_z]`
+
+### The RK4 Integration Loop
+Calculate the state derivatives four times per time step (`dt`) [4]:
+1. `k1 = f(y, t)`
+2. `k2 = f(y + 0.5*k1*dt, t + 0.5*dt)`
+3. `k3 = f(y + 0.5*k2*dt, t + 0.5*dt)`
+4. `k4 = f(y + k3*dt, t + dt)`
+5. `y_new = y + (dt/6) * (k1 + 2*k2 + 2*k3 + k4)` [4].
+
+**Quaternion Update:**
+Instead of a simple vector update, orientation quaternions must be rotated and normalized at every step [7]:
+`o_new = (cos(|w|*dt) + (w_hat)*sin(|w|*dt)) * o_old` [8].
+
+---
+
+## 2. Environmental & Wind Model
+The simulation environment must calculate air density, speed of sound, and wind turbulence dynamically [9].
+
+*   **Atmospheric Model:** Based on the Ideal Gas Law: $\rho = \frac{M p}{R T}$ and pressure decay $dp = -g_0 \rho dz$ [10, 11].
+*   **Wind Turbulence (Pink Noise):** OpenRocket uses a 2-pole Infinite Impulse Response (IIR) filter sampled at 20 Hz to generate realistic wind gusts [12, 13]. 
+    *   Equation: $x_n = w_n - a_1 x_{n-1} - a_2 x_{n-2}$ (where $w_n$ is white noise) [14].
+    *   Scale the sample to standard deviation $1.0$ (divide by 2.252), then multiply by user-defined wind standard deviation [13].
+
+---
+
+## 3. Aerodynamics: Normal Force & Center of Pressure (CP)
+The engine calculates total CP by summing the Normal Force Coefficient Derivative ($C_{N\alpha}$) and Pitching Moment ($C_{m\alpha}$) for every component [15, 16].
+
+### A. Body Components (Nose Cones, Tubes, Transitions)
+*   **Normal Force ($C_{N\alpha}$):** $\frac{2}{A_{ref}} [A(l) - A(0)] \frac{\sin \alpha}{\alpha}$ [17].
+*   **Pitch Moment ($C_{m\alpha}$):** $\frac{2}{A_{ref} d} [l A(l) - V] \frac{\sin \alpha}{\alpha}$ [18].
+*   **Body Lift Correction:** Long rockets generate lift. Add $C_N = K \frac{A_{plan}}{A_{ref}} \sin^2 \alpha$ (where K ≈ 1.1) to cylindrical body tubes [19].
+
+### B. Fins (Barrowman Equations)
+*   **Single Fin Normal Force ($C_{N\alpha1}$):** 
+    $$C_{N\alpha1} = \frac{2\pi s^2 / A_{ref}}{1 + \sqrt{1 + (\beta s^2 / (A_{fin} \cos \Gamma_c))^2}}$$ 
+    *(Where $\beta = \sqrt{|1 - M^2|}$, $s$ is span, and $\Gamma_c$ is midchord sweep angle)* [20, 21].
+*   **Fin-Body Interference Factor:** Multiply fin lift by $K_{T(B)} = 1 + \frac{r_t}{s + r_t}$ [22, 23].
+*   **Multi-Fin Multipliers:** Total fin lift is scaled based on the number of fins: 1-4 fins = $1.000$; 5 fins = $0.948$; 6 fins = $0.913$; 7 fins = $0.854$; 8 fins = $0.810$ [24].
+
+---
+
+## 4. Drag Computation ($C_D$)
+Total axial drag is computed by summing Skin Friction, Pressure Drag, Base Drag, and Parasitic Drag [25, 26].
+
+### A. Skin Friction
+Assumes a fully turbulent boundary layer [27].
+*   **Friction Coefficient ($C_f$):** $\frac{1}{(1.50 \ln R - 5.6)^2}$ *(where R is Reynolds number)* [28, 29].
+*   **Compressibility Correction:** 
+    *   Subsonic: $C_f(1 - 0.1 M^2)$ [30, 31].
+    *   Supersonic: $C_f / (1 + 0.15 M^2)^{0.58}$ [30, 31].
+
+### B. Pressure Drag (Nose Cones & Transitions)
+*   **Subsonic ($M < 0.8$):** $C_{D,pressure} = 0.85 \cdot \sin^2 \varphi$ (where $\varphi$ is the joint angle) [32, 33].
+*   **Supersonic Conical ($M > 1.3$):** $\frac{2.1 \sin^2 \epsilon}{1 + 4f_N^2} + \frac{0.5 \sin \epsilon}{\sqrt{(1 + 4f_N^2)(M^2 - 1)}}$ [34, 35].
+*   **Supersonic Ogive:** Ogives produce up to 18% less drag than cones. Apply shape factor: $[0.72 \cdot (\kappa - 0.5)^2 + 0.82] \cdot C_{D,cone}$ [36, 37].
+
+### C. Base Drag
+Caused by the vacuum at the rocket's rear. Subtract the area of actively thrusting motors from the reference area [38, 39].
+*   **Subsonic ($M < 1$):** $0.12 + 0.13 M^2$ [40, 41].
+*   **Supersonic ($M > 1$):** $0.25 / M$ [40, 41].
+
+---
+
+## 5. Roll & Pitch Dynamics
+### A. Fin Roll Dynamics
+If fins are canted at angle $\delta$, calculate the equilibrium roll rate [42, 43]:
+*   **Roll Forcing Coefficient:** $C_{lf} = \frac{N(y_{MAC} + r_t) (C_{N\alpha})_1 \delta}{d}$ [44, 45].
+*   **Roll Damping Coefficient:** $C_{ld} = \frac{N C_{N\alpha0} \omega}{A_{ref} d v_0} \sum c_i \xi_i^2 \Delta\xi_i$ [46, 47].
+
+### B. Pitch Damping
+Prevents infinite tumbling at apogee. Apply a counter-torque [48, 49]:
+*   **Body Damping Moment:** $m = 0.275 \cdot \rho r_t l^4 \omega^2$ [50, 51].
+*   **Fin Damping Moment:** $C_{damp} = 0.6 \cdot \frac{N A_{fin} \xi^3}{A_{ref} d} \cdot \frac{\omega^2}{v_0^2}$ [52, 53].
+
+---
+
+## 6. Recovery & Stage Separation
+When the rocket splits, transition to a 3-DOF point-mass solver [54, 55]. 
+
+*   **Tumbling Lower Stages:** Unstable stages tumble and cause high drag. 
+    $C_{D, tumbling} = \frac{1.42 A_f + 0.56 A_{bt}}{A_{ref}}$ *(Where $A_f$ is effective fin area and $A_{bt}$ is body profile area)* [56-58].
+*   **Parachute:** Hardcode $C_D = 0.8$ [54, 59].
+*   **Streamer:** Use OpenRocket's custom empirical mass-density formula: 
+    $C_{Dm} = 0.034 \cdot \left(\frac{\rho_m + 25}{105}\right) \cdot \left(\frac{l + 1}{l}\right)$ [60, 61].

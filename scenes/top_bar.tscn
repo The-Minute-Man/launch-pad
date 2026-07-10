@@ -62,7 +62,6 @@ theme_override_styles/separator = SubResource("StyleBoxLine_vsep")
 
 [node name="MenuBar" type="MenuBar" parent="VBox/HBox"]
 layout_mode = 2
-size_flags_horizontal = 3
 theme_override_constants/h_separation = 24
 theme_override_font_sizes/font_size = 20
 flat = true
@@ -154,7 +153,7 @@ size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 22
 theme_override_colors/font_color = Color(0.7, 0.7, 0.68, 1)
 text = "LaunchPad"
-horizontal_alignment = 2
+horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="RightMargin" type="Control" parent="VBox/HBox"]

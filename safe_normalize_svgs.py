@@ -16,7 +16,7 @@ for filename in os.listdir(svg_dir):
     content = re.sub(r'stroke="#[0-9a-fA-F]+"', 'stroke="#ebebda"', content)
     
     # 2. Force stroke-width="1.5" anywhere it is defined (so we don't add it where it shouldn't be)
-    content = re.sub(r'stroke-width="[0-9.]+"', 'stroke-width="1.5"', content)
+    content = re.sub(r'stroke-width="[0-9.]+"', 'stroke-width="1.0"', content)
     
     # 3. Fix the SVG header dimensions
     svg_header_match = re.search(r'<svg[^>]+>', content)
@@ -24,13 +24,13 @@ for filename in os.listdir(svg_dir):
         header = svg_header_match.group(0)
         
         # Enforce width="128" and height="128"
-        if 'width=' in header:
-            header = re.sub(r'width="[^"]+"', 'width="128"', header)
+        if ' width=' in header:
+            header = re.sub(r' width="[^"]+"', ' width="128"', header)
         else:
             header = header.replace('<svg ', '<svg width="128" ')
             
-        if 'height=' in header:
-            header = re.sub(r'height="[^"]+"', 'height="128"', header)
+        if ' height=' in header:
+            header = re.sub(r' height="[^"]+"', ' height="128"', header)
         else:
             header = header.replace('<svg ', '<svg height="128" ')
             

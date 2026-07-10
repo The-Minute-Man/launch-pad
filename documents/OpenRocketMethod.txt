@@ -1,0 +1,321 @@
+# The OpenRocket Physics Engine: Comprehensive Super-Specification
+
+This document is the ultimate, definitive blueprint for recreating the OpenRocket simulation engine from scratch. It combines intuitive conceptual explanations (Explain Like I'm 5), advanced fluid dynamics and rigid-body mathematics, and an explicit object-oriented software architecture. We will delve right into the bone of every single equation and attribute.
+
+---
+
+## 1. Introduction: The Concept of Numerical Integration
+
+### 1.1 The ELI5 Concept
+Imagine throwing a paper airplane. To predict exactly where it will land, you need to know three things:
+1.  **Current State:** Where is it right now, and how fast is it moving?
+2.  **Forces:** What is pushing or pulling it? (Gravity pulls down, air pushes against the nose, wind pushes the side).
+3.  **Rates of Change:** How do those forces change its speed and direction over the next tiny fraction of a second?
+
+A physics engine does not calculate the entire flight path in one go. Instead, it looks at the current moment, calculates all forces, moves the rocket a tiny bit forward in time (e.g., 0.01 seconds), recalculates the forces in this new position, and repeats. Doing this thousands of times to trace a path is called **Numerical Integration**.
+
+### 1.2 The Advanced Concept: 6 Degrees of Freedom (6-DOF)
+To perfectly capture how a rocket flies, the engine must simulate 6 Degrees of Freedom (6-DOF). 
+*   **Translation (3-DOF):** Movement along the X, Y, and Z axes (Up/Down, Left/Right, Forward/Backward).
+*   **Rotation (3-DOF):** Twisting around the X, Y, and Z axes (Pitch, Yaw, and Roll).
+
+Because a rocket can tumble or spin, calculating its aerodynamics requires knowing precisely which way it is pointing relative to the direction it is moving.
+
+---
+
+## 2. Coordinate Systems & The State Vector
+
+### 2.1 The Two Frames of Reference
+OpenRocket constantly translates data between two coordinate systems:
+
+1.  **Global Coordinate System (Earth-Fixed):**
+    *   This is the real world. The origin (0,0,0) is the launch pad.
+    *   The +Z axis always points straight up (altitude).
+    *   The X and Y axes represent horizontal distance (North/East or arbitrary).
+    *   Gravity always pulls in the -Z direction. Wind acts in this frame.
+
+2.  **Body Coordinate System (Rocket-Fixed):**
+    *   This system moves and rotates *with* the rocket. 
+    *   The origin (0,0,0) is the rocket's current **Center of Gravity (CG)**.
+    *   The +Z axis always points longitudinally along the rocket, straight out the tip of the nose cone.
+    *   The X and Y axes point laterally out the sides of the rocket.
+    *   *Why use this?* Because the rocket's Moment of Inertia (how hard it is to spin) is constant and symmetrical in this frame, making the rotational math much easier. Furthermore, aerodynamic forces like Lift always push sideways relative to the body, making them easier to calculate here.
+
+### 2.2 Quaternions vs Euler Angles
+To track rotation (how the Body frame aligns with the Global frame), you might think of using Euler angles (Pitch, Yaw, Roll degrees). 
+However, OpenRocket uses **Quaternions** $\mathbf{q} = (w, x, y, z)$.
+*   **ELI5:** If a rocket points straight up (Pitch = 90 degrees), a math error called "Gimbal Lock" occurs where Yaw and Roll become the exact same thing, freezing the simulation. Quaternions use a 4D math trick to completely avoid this.
+*   **Advanced:** A quaternion represents a single rotation of angle $\theta$ around a 3D unit axis $\vec{u} = (u_x, u_y, u_z)$.
+    $$ \mathbf{q} = \left( \cos\left(\frac{\theta}{2}\right), u_x\sin\left(\frac{\theta}{2}\right), u_y\sin\left(\frac{\theta}{2}\right), u_z\sin\left(\frac{\theta}{2}\right) \right) $$
+    We use $\mathbf{q}$ to rotate vectors (like velocity or wind) from the Global frame to the Body frame and back using quaternion multiplication or rotation matrices.
+
+### 2.3 The State Vector (Code Representation)
+The entire physical state of the simulation at time $t$ is held in this object:
+
+```python
+import numpy as np
+
+class FlightState:
+    time: float
+    position: np.ndarray            # [x, y, z] in Global Frame (meters)
+    velocity: np.ndarray            # [v_x, v_y, v_z] in Global Frame (m/s)
+    orientation: Quaternion         # q mapping Global -> Body
+    angular_velocity: np.ndarray    # [w_x, w_y, w_z] in Body Frame (rad/s)
+    
+    # Mass Properties (Changing over time)
+    mass: float                     # kg
+    cg: float                       # meters from tip of nose
+    inertia_longitudinal: float     # I_L (Pitch/Yaw inertia)
+    inertia_rotational: float       # I_R (Roll inertia)
+```
+
+---
+
+## 3. Environmental Physics
+
+Before calculating how the rocket reacts, we must define the environment it occupies.
+
+### 3.1 Gravity
+*   **ELI5:** Gravity pulls down. For low flights, it's 9.81 $m/s^2$. For high flights, it gets slightly weaker.
+*   **Advanced:** OpenRocket implements the inverse-square law for suborbital accuracy.
+    $$ g = g_0 \left( \frac{R_e}{R_e + h} \right)^2 $$
+    Where $g_0 = 9.80665 \text{ m/s}^2$, Earth's radius $R_e \approx 6,371,000 \text{ m}$, and $h$ is altitude (the $z$ component of Global position). The gravity vector is strictly $\vec{g} = [0, 0, -g]$.
+
+### 3.2 The Atmosphere (International Standard Atmosphere - ISA)
+*   **ELI5:** As you go higher, the air gets colder and thinner. Thinner air means less drag (good) but fins have less air to push against (bad). 
+*   **Advanced:** The ISA formulas derive Temperature ($T$), Pressure ($P$), and Density ($\rho$) based on a standard lapse rate $L$.
+
+```python
+def atmosphere(altitude_h: float):
+    T0 = 288.15        # Sea level temp (Kelvin)
+    P0 = 101325.0      # Sea level pressure (Pascals)
+    L = 0.0065         # Lapse rate (K/m)
+    M = 0.0289644      # Molar mass of air (kg/mol)
+    R = 8.3144598      # Universal gas constant
+    gamma = 1.4        # Ratio of specific heats
+    
+    # 1. Temperature drops linearly
+    T = T0 - (L * altitude_h)
+    
+    # 2. Pressure drops exponentially (Hydrostatic equation)
+    P = P0 * (1 - (L * altitude_h) / T0)**((9.80665 * M) / (R * L))
+    
+    # 3. Density (Ideal Gas Law)
+    rho = (P * M) / (R * T)
+    
+    # 4. Speed of Sound (Mach 1)
+    speed_of_sound = np.sqrt(gamma * (R / M) * T)
+    
+    return T, P, rho, speed_of_sound
+```
+
+### 3.3 Wind and Relative Velocity
+Wind $\vec{W}$ is defined in the Global frame. The rocket's absolute velocity is $\vec{v}$.
+The **Relative Wind Velocity** ($\vec{V}_{rel, global}$) is the air hitting the rocket:
+$$ \vec{V}_{rel, global} = \vec{W} - \vec{v} $$
+To calculate aerodynamics, we must rotate this vector into the Body frame using the orientation quaternion:
+$$ \vec{V}_{rel, body} = \mathbf{q}^{-1} \otimes \vec{V}_{rel, global} \otimes \mathbf{q} $$
+We will use $\vec{V}_{rel, body}$ for all Lift and Drag calculations!
+
+---
+
+## 4. Rocket Mass Properties & Components
+
+A rocket's physical properties are the sum of its components.
+
+### 4.1 Mass, CG, and Inertia
+As a solid rocket motor burns, it loses mass. The mass leaves from the rear of the rocket, causing the total Center of Gravity (CG) to shift forward.
+*   **Mass ($m$):** Total weight (kg).
+*   **Center of Gravity (CG):** The balance point.
+*   **Inertia ($I_L, I_R$):** $I_L$ represents the resistance to Pitch/Yaw (tumbling end-over-end). A long, heavy rocket has high $I_L$. $I_R$ represents resistance to Roll (spinning like a drill).
+At any time $t$, OpenRocket linearly interpolates the motor's current mass and CG from a Thrust Curve file (.eng or .rse), and adds it to the dry components to update the State Vector.
+
+### 4.2 Component Architecture
+Every physical part of the rocket inherits from a base class that tracks its individual properties, including crucial values like `surface_roughness` (which dictates friction drag).
+
+```python
+class RocketComponent:
+    length: float
+    position_z: float           # Distance from tip of nose cone to tip of this component
+    mass: float
+    cg_local: float             # CG relative to the component's own tip
+    surface_roughness: float    # Roughness height in meters (e.g., 50e-6 for paint)
+    
+    # Aerodynamic variables calculated dynamically
+    def get_cn_alpha(self) -> float: pass
+    def get_cp_local(self) -> float: pass
+```
+
+---
+
+## 5. Aerodynamics: The Extended Barrowman Equations
+
+James Barrowman (1967) established a method to find the aerodynamic Center of Pressure (CP).
+
+### 5.1 Angle of Attack ($\alpha$) and Normal Force
+*   **ELI5:** If the rocket flies straight into the wind, it cuts through perfectly. If it tilts slightly, the wind hits its side. This tilt angle is the Angle of Attack ($\alpha$). The sideways force the wind creates is the Normal Force (Lift), which tries to push the rocket back straight.
+*   **Advanced:** $\alpha$ is derived from the Relative Wind in the Body frame.
+    $$ \alpha = \arctan\left( \frac{\sqrt{V_{rel, x}^2 + V_{rel, y}^2}}{V_{rel, z}} \right) $$
+
+Instead of calculating raw force, Barrowman calculates a coefficient called $C_{N\alpha}$ (Normal Force Coefficient Derivative) for every part of the rocket.
+
+### 5.2 Calculating Component $C_{N\alpha}$ and CP
+The reference area $A_{ref}$ is the area of the maximum body tube diameter $d_{ref}$: $A_{ref} = \pi (d_{ref}/2)^2$.
+
+#### 1. Nose Cones
+Regardless of shape (Cone, Ogive, Parabolic):
+*   $C_{N\alpha, nose} = 2.0$
+*   **CP Location ($X_{CP}$):** For a Cone, $X_{CP} = \frac{2}{3} L$. For an Ogive, $X_{CP} = 0.466 L$.
+
+#### 2. Conical Transitions (Shoulders/Boat tails)
+When a tube changes diameter from $d_{front}$ to $d_{rear}$ over length $L_t$:
+*   $C_{N\alpha, trans} = 2 \left[ \left(\frac{d_{rear}}{d_{ref}}\right)^2 - \left(\frac{d_{front}}{d_{ref}}\right)^2 \right]$
+*   $X_{CP, trans} = X_{front} + \frac{L_t}{3} \left[ 1 + \frac{1 - d_{front}/d_{rear}}{1 - (d_{front}/d_{rear})^2} \right]$
+*(Notice that a boat tail where $d_{rear} < d_{front}$ creates a NEGATIVE $C_{N\alpha}$, destabilizing the rocket!)*
+
+#### 3. Fin Sets (Extended by OpenRocket)
+Fins generate massive lift. 
+Let $n$ = number of fins, $s$ = span, $L_r$ = root chord, $L_t$ = tip chord, $L_f$ = mid-chord sweep length.
+*   **Interference Factor ($K_{fb}$):** Fins are attached to a body tube of radius $R$. The tube channels air over the fins, making them more effective. 
+    $$ K_{fb} = 1 + \frac{R}{s + R} $$
+*   **$C_{N\alpha, fins}$:**
+    $$ C_{N\alpha, fins} = K_{fb} \frac{4 n \left(\frac{s}{d_{ref}}\right)^2}{1 + \sqrt{1 + \left(\frac{2 L_f}{L_r + L_t}\right)^2}} $$
+*   **$X_{CP, fins}$:** Located at the geometric centroid of the fin area.
+
+### 5.3 Total Center of Pressure
+The rocket's total Center of Pressure is the weighted average of all component CPs, weighted by their $C_{N\alpha}$:
+$$ X_{CP, total} = \frac{\sum (C_{N\alpha, i} \cdot X_{CP, i})}{\sum C_{N\alpha, i}} $$
+
+> [!IMPORTANT]
+> **Stability Caliber:** The distance between the CG and the total CP, divided by $d_{ref}$. If $X_{CP} > X_{CG}$ (CP is closer to the tail), the rocket is stable.
+
+---
+
+## 6. Aerodynamics: Comprehensive Drag Modeling
+
+Drag is the force slowing the rocket down. OpenRocket splits Total Drag Coefficient ($C_D$) into three separate physical phenomena: Friction, Base, and Pressure/Wave drag.
+
+### 6.1 Friction Drag ($C_{D,f}$)
+*   **ELI5:** Air scraping against the sides of the rocket like sandpaper. Rougher paint = more drag.
+*   **Advanced:** Governed by the Reynolds Number ($Re$), which determines if airflow is smooth (Laminar) or chaotic (Turbulent).
+    $$ Re = \frac{\rho \cdot |\vec{V}_{rel}| \cdot L}{\mu} $$
+    Where $L$ is rocket length and $\mu \approx 1.8 \times 10^{-5}$ (dynamic viscosity of air).
+    OpenRocket calculates a critical Reynolds number based on `surface_roughness` ($R_s$).
+    *   **Laminar:** $C_f = \frac{1.328}{\sqrt{Re}}$
+    *   **Turbulent:** $C_f = \frac{0.074}{Re^{0.2}}$ (Adjusted upwards heavily if $R_s$ is large).
+    *   **Mach Correction:** As you go faster, air compresses and heats up, slightly reducing friction. $C_{D,f} = C_f (1 - 0.1 M^2)$.
+
+### 6.2 Base Drag ($C_{D,b}$)
+*   **ELI5:** As the rocket moves, it leaves a "hole" in the air behind its flat bottom. The vacuum tries to suck the rocket backward. If the motor is firing, the flames fill this hole, removing base drag!
+*   **Advanced:** OpenRocket uses Hoerner's empirical formula based on skin friction:
+    $$ C_{D,b} = \frac{0.029}{\sqrt{C_{D,f}}} \left( \frac{d_{base}}{d_{ref}} \right)^3 $$
+    During motor burn, $C_{D,b}$ is scaled down towards zero proportional to the thrust.
+
+### 6.3 Pressure / Wave Drag ($C_{D,p}$)
+*   **ELI5:** When the rocket gets close to the speed of sound (Mach 1), the air can't move out of the way fast enough. It piles up, creating a literal wall of pressure called a shockwave. This causes a massive spike in drag.
+*   **Advanced:** At $M > 0.8$, transonic wave drag equations kick in. OpenRocket uses Maccoll's conical shock theory to estimate pressure drag based on the nose cone's fineness ratio ($L/D$). 
+    For $M > 1.0$: $C_{D,wave} \approx \frac{2.1 \sin^2(\theta)}{M^2}$ (where $\theta$ is the half-angle of the tip).
+
+### 6.4 Creating the Aerodynamic Force Vectors (Body Frame)
+Now we have total Normal Force and total Drag Force magnitudes:
+$$ F_{normal} = \frac{1}{2} \rho |\vec{V}_{rel}|^2 A_{ref} (C_{N\alpha, total} \cdot \alpha) $$
+$$ F_{drag} = \frac{1}{2} \rho |\vec{V}_{rel}|^2 A_{ref} (C_{D,f} + C_{D,b} + C_{D,p}) $$
+
+We convert these into a 3D vector in the Body Frame:
+*   $\vec{F}_{drag\_vector}$ points strictly in the direction of the relative wind vector.
+*   $\vec{F}_{normal\_vector}$ points perpendicular to the rocket's Z-axis, in the plane of the angle of attack.
+$$ \vec{F}_{aero, body} = \vec{F}_{drag\_vector} + \vec{F}_{normal\_vector} $$
+
+---
+
+## 7. Aerodynamics: Torques and Damping
+
+Forces cause Translation. Torques (twisting forces) cause Rotation.
+
+### 7.1 Aerodynamic Torque
+The Normal Force acts entirely at the Center of Pressure (CP). Since the rocket rotates around its Center of Gravity (CG), this creates a lever arm (Torque = Force x Distance).
+*   Lever arm vector $\vec{r}_{cp} = [0, 0, CG - X_{CP}]$
+*   Aerodynamic Torque: $\vec{\tau}_{aero} = \vec{r}_{cp} \times \vec{F}_{aero, body}$
+
+### 7.2 Pitch/Yaw Damping and Roll Damping
+*   **ELI5:** If you swing a bat underwater, the water resists the swing. If the rocket is tumbling or spinning, the air resists the fins moving sideways. This slows down the tumble/spin.
+*   **Advanced:** OpenRocket calculates Damping Torques ($\vec{\tau}_{damp}$) directly opposing the angular velocity $\vec{\omega}$.
+    Pitch/Yaw Damping uses coefficient $C_{R\alpha}$:
+    $$ \vec{\tau}_{pitch\_damp} = - \left( \frac{1}{2} \rho |\vec{V}_{rel}| A_{ref} L_{ref}^2 C_{R\alpha} \right) \vec{\omega}_{x,y} $$
+    Roll Damping uses coefficient $C_{lp}$, driven by fin span.
+
+The Total Body Torque is: 
+$$ \vec{\tau}_{total, body} = \vec{\tau}_{aero} + \vec{\tau}_{pitch\_damp} + \vec{\tau}_{roll\_damp} $$
+
+---
+
+## 8. 6-DOF Equations of Motion (Rigid Body Dynamics)
+
+We have the Forces and Torques. Now we apply Newton's Laws to find the Accelerations (Rates of Change).
+
+### 8.1 Translational Derivatives (Global Frame)
+We sum all forces in the Body Frame (Thrust, Aero) and Gravity, and find acceleration.
+$$ \vec{F}_{thrust, body} = [0, 0, T(t)] $$
+$$ \vec{F}_{total, body} = \vec{F}_{aero, body} + \vec{F}_{thrust, body} $$
+Rotate to Global Frame using orientation quaternion $\mathbf{q}$:
+$$ \vec{F}_{total, global} = \mathbf{q} \otimes \vec{F}_{total, body} \otimes \mathbf{q}^{-1} $$
+Add Global Gravity: $\vec{F}_{total, global} = \vec{F}_{total, global} + [0, 0, -mg]$
+**Derivatives:**
+$$ \dot{\vec{v}} \text{ (Acceleration)} = \frac{\vec{F}_{total, global}}{m} $$
+$$ \dot{\vec{x}} \text{ (Velocity)} = \vec{v} $$
+
+### 8.2 Rotational Derivatives (Body Frame)
+We use Euler's equations for rigid body dynamics. The inertia tensor $\mathbf{I}$ is a 3x3 diagonal matrix:
+$$ \mathbf{I} = \text{diag}(I_L, I_L, I_R) $$
+Euler's equation: $\mathbf{I} \dot{\vec{\omega}} + \vec{\omega} \times (\mathbf{I} \vec{\omega}) = \vec{\tau}_{total, body}$
+Because $\mathbf{I}$ is diagonal, we easily solve for Angular Acceleration ($\dot{\vec{\omega}}$):
+$$ \dot{\omega}_x = \frac{\tau_x - (I_R - I_L) \omega_y \omega_z}{I_L} $$
+$$ \dot{\omega}_y = \frac{\tau_y - (I_L - I_R) \omega_z \omega_x}{I_L} $$
+$$ \dot{\omega}_z = \frac{\tau_z}{I_R} $$
+
+**Quaternion Derivative:**
+$$ \dot{\mathbf{q}} = \frac{1}{2} \mathbf{q} \otimes [0, \omega_x, \omega_y, \omega_z] $$
+
+---
+
+## 9. The Engine Loop: Runge-Kutta 4 (RK4)
+
+### 9.1 The RK4 Method
+*   **ELI5:** If a car accelerates, its speed changes constantly. If you assume its speed is constant for 1 second, your math will be wrong. RK4 fixes this by looking at the acceleration at the start, making two guesses about the middle of the second, and one guess about the end. It averages all 4 to find the perfect answer.
+*   **Advanced:** Let the entire Flight State be vector $\mathbf{Y}$. We have a function $f(t, \mathbf{Y})$ that calculates all the derivatives (Section 8). 
+For a time step $dt$ (e.g., 0.01s):
+1.  **$k_1$:** Rate at the start. $k_1 = f(t, \mathbf{Y}_n)$
+2.  **$k_2$:** Rate at midpoint, using $k_1$. $k_2 = f(t + \frac{dt}{2}, \mathbf{Y}_n + \frac{dt}{2} k_1)$
+3.  **$k_3$:** Rate at midpoint, using $k_2$. $k_3 = f(t + \frac{dt}{2}, \mathbf{Y}_n + \frac{dt}{2} k_2)$
+4.  **$k_4$:** Rate at end, using $k_3$. $k_4 = f(t + dt, \mathbf{Y}_n + dt \cdot k_3)$
+
+We advance the rocket's state into the future by integrating these weighted derivatives:
+$$ \mathbf{Y}_{n+1} = \mathbf{Y}_n + \frac{dt}{6}(k_1 + 2k_2 + 2k_3 + k_4) $$
+
+### 9.2 The Simulation Loop Code
+
+```python
+def run_simulation(rocket, environment, dt=0.01):
+    state = FlightState(time=0, position=[0,0,0], velocity=[0,0,0], orientation=Quaternion(1,0,0,0))
+    launch_rod_length = 2.0
+    
+    while state.position[2] >= 0 or state.time == 0:
+        # Step 1: Calculate k1, k2, k3, k4 derivatives using 6-DOF equations
+        # Step 2: Update state using RK4 weighted average
+        state = step_rk4(state, dt)
+        
+        # Step 3: Enforce Constraints (Event Listeners)
+        # 1. Launch Rod: If altitude < 2.0m, set angular velocity and lateral velocity to zero.
+        if np.linalg.norm(state.position) < launch_rod_length:
+            state.angular_velocity = [0,0,0]
+            # Zero out lateral velocity, enforcing motion only along rod vector
+        
+        # 2. Apogee Detection: When Z-velocity crosses from positive to negative.
+        if state.velocity[2] < 0 and previous_velocity_z >= 0:
+            print("Apogee! Deploy Parachute.")
+            # Trigger event: drastically increase C_D, shift CG, alter mass.
+            
+    print("Simulation Complete (Ground Hit).")
+```
+
+This super-specification provides the absolute exhaustive blueprint of every variable, mathematical formula, fluid dynamic property, and software architecture choice required to replicate the OpenRocket physics engine.

@@ -11,9 +11,9 @@ extends Resource
 @export var file_path: String = ""
 
 # ── Constraints (user inputs) ──
-@export var target_altitude: float = 1000.0       # meters
+@export var target_altitude: float = 0.0       # meters
 @export var max_diameter: float = 0.1              # meters
-@export var motor_class: String = "C"
+@export var motor_class: String = ""
 @export var stability_margin: float = 1.5          # calibers
 
 # ── GA Results (populated after optimization) ──
@@ -43,9 +43,9 @@ func from_dict(data: Dictionary) -> void:
 	description = data.get("description", "")
 	created_at = data.get("created_at", "")
 	modified_at = data.get("modified_at", "")
-	target_altitude = data.get("target_altitude", 1000.0)
+	target_altitude = data.get("target_altitude", 0.0)
 	max_diameter = data.get("max_diameter", 0.1)
-	motor_class = data.get("motor_class", "C")
+	motor_class = data.get("motor_class", "")
 	stability_margin = data.get("stability_margin", 1.5)
 	generation_count = data.get("generation_count", 0)
 	population_size = data.get("population_size", 100)

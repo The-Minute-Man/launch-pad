@@ -4,9 +4,9 @@
 [ext_resource type="Script" path="res://scripts/side_bar.gd" id="2_script"]
 [ext_resource type="Texture2D" uid="uid://bjw8ajxldw00t" path="res://ui/icons/home.svg" id="3_home"]
 [ext_resource type="Texture2D" path="res://ui/icons/recent.svg" id="4_recent"]
-[ext_resource type="Texture2D" path="res://ui/icons/trash.svg" id="5_trash"]
+[ext_resource type="Texture2D" path="res://ui/icons/trashcan.svg" id="5_trash"]
 [ext_resource type="Texture2D" path="res://ui/icons/componts.svg" id="6_components"]
-[ext_resource type="Texture2D" path="res://ui/icons/cone.svg" id="7_cone"]
+[ext_resource type="Texture2D" path="res://ui/icons/cpu.svg" id="7_cone"]
 [ext_resource type="Texture2D" path="res://ui/icons/data.svg" id="8_data"]
 [ext_resource type="Texture2D" path="res://ui/icons/export.svg" id="9_export"]
 [ext_resource type="Texture2D" path="res://ui/icons/settings.svg" id="10_settings"]
@@ -41,14 +41,6 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="AllProjectsBtn" type="Button" parent="Margin/VBox/HomeTools"]
-custom_minimum_size = Vector2(48, 48)
-layout_mode = 2
-tooltip_text = "All Projects"
-flat = true
-icon = ExtResource("3_home")
-icon_alignment = 1
-expand_icon = true
 
 [node name="RecentBtn" type="Button" parent="Margin/VBox/HomeTools"]
 custom_minimum_size = Vector2(48, 48)

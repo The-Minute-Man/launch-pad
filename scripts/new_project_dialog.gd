@@ -6,7 +6,6 @@ signal project_created
 @onready var desc_input: LineEdit = %DescInput
 @onready var cancel_button: Button = %CancelButton
 @onready var create_button: Button = %CreateButton
-
 func _ready() -> void:
 	cancel_button.pressed.connect(_on_cancel)
 	create_button.pressed.connect(_on_create)
