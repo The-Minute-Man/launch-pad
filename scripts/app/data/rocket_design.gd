@@ -57,37 +57,112 @@ func get_total_length() -> float:
 			max_len = end_pos
 	return max_len
 
-# Rough approximation for Moments of Inertia
-func get_inertia_longitudinal() -> float:
-	# Using standard approximation for now
-	# I_L = Sum(I_local + mass * distance_to_cg^2)
+# High-Fidelity 3x3 Inertia Tensor Approximation
+# Returns { "Ixx": float, "Iyy": float, "Izz": float }
+# Z is the longitudinal axis (roll), X and Y are lateral pitch/yaw
+func get_inertia_tensor() -> Dictionary:
 	var cg = get_cg()
-	var inertia = 0.0
+	var Ixx = 0.0
+	var Iyy = 0.0
+	var Izz = 0.0
+	
 	for comp in components:
 		var m = comp.get_mass()
 		var d = comp.get_global_cg() - cg
 		
-		# Simple local inertia approximation (treating components as point masses for now)
-		# A real implementation would use solid geometry inertia formulas
-		var local_i = 0.0
+		# Simple local inertia approximation
+		# In a real system, each component would return its own local tensor
+		var r = get_max_diameter() / 2.0
+		var local_Izz = 0.5 * m * pow(r, 2)
 		
-		inertia += local_i + (m * pow(d, 2))
+		var comp_len = 0.0
+		if "length" in comp:
+			comp_len = comp.length
+		elif "packed_length" in comp:
+			comp_len = comp.packed_length
+		elif "root_chord" in comp:
+			comp_len = comp.root_chord
+			
+		var local_Ixx = (1.0/12.0) * m * pow(comp_len, 2) + 0.25 * m * pow(r, 2)
+		
+		# Parallel axis theorem
+		Ixx += local_Ixx + (m * pow(d, 2))
+		Iyy += local_Ixx + (m * pow(d, 2)) # Symmetrical
+		Izz += local_Izz
 	
-	if inertia < 0.001: inertia = 0.05 # Minimum sanity check
-	return inertia
+	return { "Ixx": Ixx, "Iyy": Iyy, "Izz": Izz }
 
-func get_inertia_rotational() -> float:
+# Barrowman Aerodynamic Aggregator
+func get_aerodynamics() -> Dictionary:
+	var total_cn_alpha = 0.0
+	var weighted_cp_sum = 0.0
 	var max_d = get_max_diameter()
-	var mass = get_total_mass()
-	var inertia = 0.5 * mass * pow(max_d / 2.0, 2)
-	if inertia < 0.001: inertia = 0.005
-	return inertia
+	
+	for comp in components:
+		var cn_a = 0.0
+		var cp_local = 0.0
+		
+		if comp is NoseCone:
+			cn_a = 2.0
+			cp_local = comp.get_aerodynamic_cp()
+		elif comp is FinSet:
+			cn_a = comp.get_cn_alpha(max_d / 2.0)
+			cp_local = comp.get_aerodynamic_cp()
+		elif comp is Transition:
+			cn_a = comp.get_cn_alpha()
+			# Normalizing based on reference area diameter
+			cn_a *= pow(max_d / comp.fore_diameter, 2) # Rough normalization
+			cp_local = comp.get_aerodynamic_cp()
+			
+		# Add global position offset to the local CP
+		var global_cp = comp.position_offset + cp_local
+		
+		total_cn_alpha += cn_a
+		weighted_cp_sum += (cn_a * global_cp)
+		
+	var final_cp = 0.0
+	if total_cn_alpha > 0:
+		final_cp = weighted_cp_sum / total_cn_alpha
+		
+	return { "cn_alpha": total_cn_alpha, "cp": final_cp }
 
 func get_motor() -> RocketMotor:
 	for comp in components:
 		if comp is RocketMotor:
 			return comp
 	return null
+
+func get_parachute() -> Parachute:
+	for comp in components:
+		if comp is Parachute:
+			return comp
+	return null
+
+func get_fin_cant() -> float:
+	for comp in components:
+		if comp is FinSet:
+			return comp.fin_cant_angle
+	return 0.0
+
+func get_wetted_area() -> float:
+	var area = 0.0
+	for comp in components:
+		if comp is BodyTube:
+			area += 2.0 * PI * (comp.outer_diameter / 2.0) * comp.length
+		elif comp is Transition:
+			var R1 = comp.fore_diameter / 2.0
+			var R2 = comp.aft_diameter / 2.0
+			var slant = sqrt(pow(R1 - R2, 2) + pow(comp.length, 2))
+			area += PI * (R1 + R2) * slant
+		elif comp is FinSet:
+			area += 2.0 * comp.span * comp.root_chord * comp.fin_count
+	return area
+
+func get_fin_span() -> float:
+	for comp in components:
+		if comp is FinSet:
+			return comp.span
+	return 0.0
 
 # Packages all data into the exact format simulator.gd expects
 func export_to_simulator() -> Dictionary:
@@ -97,13 +172,24 @@ func export_to_simulator() -> Dictionary:
 	if ref_area == 0.0:
 		ref_area = PI * pow(0.02, 2) # Fallback to 4cm diameter
 		
+	var aero = get_aerodynamics()
+	var inertia = get_inertia_tensor()
+	var parachute = get_parachute()
+	
 	return {
 		"mass": get_total_mass(),
 		"cg": get_cg(),
-		"inertia_longitudinal": get_inertia_longitudinal(),
-		"inertia_rotational": get_inertia_rotational(),
+		"inertia": inertia,
+		"cn_alpha": aero["cn_alpha"],
+		"cp": aero["cp"],
+		"fin_cant_angle": get_fin_cant(),
+		"fin_span": get_fin_span(),
+		"wetted_area": get_wetted_area(),
 		"ref_area": ref_area,
 		"ref_length": d,
 		"rocket_length": get_total_length(),
-		"motor": get_motor()
+		"motor": get_motor(),
+		"has_parachute": parachute != null,
+		"parachute_diameter": parachute.diameter if parachute else 0.0,
+		"parachute_cd": parachute.drag_coefficient if parachute else 0.0
 	}

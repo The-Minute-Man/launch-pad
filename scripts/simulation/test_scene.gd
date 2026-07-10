@@ -34,6 +34,7 @@ func _ready() -> void:
 	fins.thickness = 0.003
 	fins.position_offset = 0.6 # Attached near the bottom
 	fins.material_name = "Plywood"
+	fins.fin_cant_angle = 0.0 # EDGE CASE: Spin the rocket!
 	rocket.add_component(fins)
 	
 	# 4. The Real Motor! (Estes C6)
@@ -43,6 +44,12 @@ func _ready() -> void:
 		motor.position_offset = 0.65 - motor.length # Put motor at the very bottom
 		rocket.add_component(motor)
 		print("Loaded Motor: ", motor.component_name, " by ", motor.manufacturer)
+		
+	# 5. Recovery: Parachute
+	var chute = Parachute.new()
+	chute.diameter = 0.3 # 30cm (12 inch) parachute
+	chute.position_offset = 0.2 # Packed inside the body tube
+	rocket.add_component(chute)
 	
 	# Output the calculated stats
 	var sim_data = rocket.export_to_simulator()

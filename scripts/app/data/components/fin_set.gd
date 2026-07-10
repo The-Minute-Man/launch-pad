@@ -7,6 +7,7 @@ extends RocketComponent
 @export var span: float = 0.04
 @export var sweep_length: float = 0.03
 @export var thickness: float = 0.003
+@export var fin_cant_angle: float = 0.0 # Angle in degrees to spin the rocket
 
 func _init() -> void:
 	component_name = "Fin Set"

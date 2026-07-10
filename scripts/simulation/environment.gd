@@ -23,28 +23,31 @@ var a2: float = 0.9025
 
 # Get atmospheric conditions at a given altitude
 static func get_atmosphere(altitude: float) -> Dictionary:
-	var h = max(0.0, altitude)
-	# 1. Temperature drops linearly
-	var temp = T0 - (L * h)
+	var T = T0
+	var p = P0
+	var rho = 1.225
 	
-	# 2. Pressure drops exponentially (Hydrostatic equation)
-	var pressure = P0 * pow(1.0 - (L * h) / T0, (G0 * M_AIR) / (R * L))
+	if altitude < 11000.0:
+		T = T0 - L * altitude
+		p = P0 * pow(1.0 - (L * altitude) / T0, (G0 * M_AIR) / (R * L))
+		rho = (p * M_AIR) / (R * T)
+	else:
+		T = 216.65 # Temp at 11km Tropopause
+		var p11 = 22632.1 # Pressure at 11km
+		p = p11 * exp((-G0 * M_AIR * (altitude - 11000.0)) / (R * T))
+		rho = (p * M_AIR) / (R * T)
 	
-	# 3. Density (Ideal Gas Law)
-	var density = (pressure * M_AIR) / (R * temp)
-	
-	# 4. Speed of Sound
-	var speed_of_sound = sqrt(GAMMA * (R / M_AIR) * temp)
+	var a = sqrt(GAMMA * (R / M_AIR) * T) # Speed of sound
 	
 	return {
-		"temperature": temp,
-		"pressure": pressure,
-		"density": density,
-		"speed_of_sound": speed_of_sound
+		"temperature": T,
+		"pressure": p,
+		"density": rho,
+		"speed_of_sound": a
 	}
 
 # Get current wind vector including pink noise turbulence
-func get_wind(time: float, altitude: float) -> Vector3:
+func get_wind(_time: float, _altitude: float) -> Vector3:
 	# Generate white noise
 	var w_x = randfn(0.0, 1.0)
 	var w_y = randfn(0.0, 1.0)
