@@ -5,11 +5,9 @@
 
 VISION
 ------
-LaunchPad is a desktop rocket-design optimizer. The user defines a set of
-constraints (target altitude, max body diameter, motor class, stability margin)
-and the application automatically generates and evolves hundreds of rocket
-designs using a Genetic Algorithm (GA). Instead of designing one rocket by hand
-in OpenRocket, LaunchPad does the exploring for you.
+LaunchPad is a next-generation desktop rocket-design tool. The project is split into two major phases:
+1. **The Manual Editor (Phase 1):** A complete, modernized replica of OpenRocket where users can 100% manually build, visualize, and simulate their own rockets part-by-part using a hierarchical component tree.
+2. **The Optimizer (Phase 2):** A Genetic Algorithm (GA) extension where the user defines constraints (target altitude, stability) and the application automatically generates and evolves hundreds of rocket designs for them.
 
 How the GA will work:
   - Each rocket's dimensions become a "genome" (body diameter, length, fin span,
