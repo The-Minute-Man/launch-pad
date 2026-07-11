@@ -1,5 +1,5 @@
-<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="128" height="128" stroke="#ebebda" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round">
-                <path d="M 15 45 A 35 35 0 0 1 85 45 Z" fill="transparent"/>
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="128" height="128" stroke="#ebebda" stroke-width="6.2" stroke-linejoin="round" stroke-linecap="round">
+                <path d="M 15 45 A 35 35 0 0 1 85 45 Z" fill="none"/>
                 <line x1="15" y1="45" x2="50" y2="85"/>
                 <line x1="40" y1="45" x2="50" y2="85"/>
                 <line x1="60" y1="45" x2="50" y2="85"/>

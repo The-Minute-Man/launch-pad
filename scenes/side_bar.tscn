@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://c5q3sidebaruid"]
+[gd_scene load_steps=18 format=3 uid="uid://c5q3sidebaruid"]
 
 [ext_resource type="Theme" uid="uid://dgihhedsjca4b" path="res://ui/themes/Rajdhani.tres" id="1_theme"]
 [ext_resource type="Script" path="res://scripts/app/ui/side_bar.gd" id="2_script"]
@@ -10,6 +10,12 @@
 [ext_resource type="Texture2D" path="res://ui/icons/data.svg" id="8_data"]
 [ext_resource type="Texture2D" path="res://ui/icons/export.svg" id="9_export"]
 [ext_resource type="Texture2D" path="res://ui/icons/settings.svg" id="10_settings"]
+[ext_resource type="Texture2D" path="res://ui/icons/chevrons-left.svg" id="11_back"]
+[ext_resource type="Texture2D" path="res://ui/icons/rocket_components/assembly_components.svg" id="12_assembly"]
+[ext_resource type="Texture2D" path="res://ui/icons/rocket_components/body_components.svg" id="13_body"]
+[ext_resource type="Texture2D" path="res://ui/icons/rocket_components/inner_components.svg" id="14_inner"]
+[ext_resource type="Texture2D" path="res://ui/icons/rocket_components/mass_components.svg" id="15_mass"]
+[ext_resource type="Texture2D" path="res://ui/icons/rocket_components/fin_components.svg" id="16_fin"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
 bg_color = Color(0.15, 0.15, 0.14, 1)
@@ -101,6 +107,86 @@ flat = true
 icon = ExtResource("9_export")
 icon_alignment = 1
 expand_icon = true
+
+[node name="RocketComponentsTools" type="VBoxContainer" parent="Margin/VBox"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="ComponentsBackBtn" type="Button" parent="Margin/VBox/RocketComponentsTools"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+tooltip_text = "Back to Editor"
+flat = true
+icon = ExtResource("11_back")
+icon_alignment = 1
+expand_icon = true
+
+[node name="AssemblyBtn" type="Button" parent="Margin/VBox/RocketComponentsTools"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+tooltip_text = "Assembly Components"
+flat = true
+icon = ExtResource("12_assembly")
+icon_alignment = 1
+expand_icon = true
+
+[node name="BodyBtn" type="Button" parent="Margin/VBox/RocketComponentsTools"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+tooltip_text = "Body Components"
+flat = true
+icon = ExtResource("13_body")
+icon_alignment = 1
+expand_icon = true
+
+[node name="InnerBtn" type="Button" parent="Margin/VBox/RocketComponentsTools"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+tooltip_text = "Inner Components"
+flat = true
+icon = ExtResource("14_inner")
+icon_alignment = 1
+expand_icon = true
+
+[node name="MassBtn" type="Button" parent="Margin/VBox/RocketComponentsTools"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+tooltip_text = "Mass Components"
+flat = true
+icon = ExtResource("15_mass")
+icon_alignment = 1
+expand_icon = true
+
+[node name="FinBtn" type="Button" parent="Margin/VBox/RocketComponentsTools"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+tooltip_text = "Fin Components"
+flat = true
+icon = ExtResource("16_fin")
+icon_alignment = 1
+expand_icon = true
+
+[node name="SubComponentsTools" type="VBoxContainer" parent="Margin/VBox"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="SubBackBtn" type="Button" parent="Margin/VBox/SubComponentsTools"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+tooltip_text = "Back to Categories"
+flat = true
+icon = ExtResource("11_back")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Items" type="VBoxContainer" parent="Margin/VBox/SubComponentsTools"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 16
 
 [node name="Spacer" type="Control" parent="Margin/VBox"]
 layout_mode = 2
