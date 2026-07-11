@@ -55,3 +55,13 @@ func get_aerodynamic_cp() -> float:
 		Shape.OGIVE, Shape.PARABOLIC:
 			return length * 0.466
 	return length * 0.5
+
+func get_local_Ixx(mass: float) -> float:
+	var R = base_diameter / 2.0
+	# Approximation for thin-walled hollow nose cone local Ixx
+	return mass * (pow(length, 2) / 18.0 + pow(R, 2) / 4.0)
+
+func get_local_Izz(mass: float) -> float:
+	var R = base_diameter / 2.0
+	# Izz for hollow cone
+	return mass * pow(R, 2) / 2.0

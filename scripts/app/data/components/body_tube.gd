@@ -21,3 +21,13 @@ func _calculate_mass() -> float:
 func _calculate_local_cg() -> float:
 	# A uniform cylinder's CG is exactly in the middle
 	return length / 2.0
+
+func get_local_Ixx(mass: float) -> float:
+	var R_out = outer_diameter / 2.0
+	var R_in = min(inner_diameter / 2.0, R_out - 0.0001)
+	return mass * (pow(length, 2) / 12.0 + (pow(R_out, 2) + pow(R_in, 2)) / 4.0)
+
+func get_local_Izz(mass: float) -> float:
+	var R_out = outer_diameter / 2.0
+	var R_in = min(inner_diameter / 2.0, R_out - 0.0001)
+	return mass * (pow(R_out, 2) + pow(R_in, 2)) / 2.0

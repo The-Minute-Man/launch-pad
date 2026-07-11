@@ -180,7 +180,7 @@ Let $n$ = number of fins, $s$ = span, $L_r$ = root chord, $L_t$ = tip chord, $L_
     $$ K_{fb} = 1 + \frac{R}{s + R} $$
 *   **$C_{N\alpha, fins}$:**
     $$ C_{N\alpha, fins} = K_{fb} \frac{4 n \left(\frac{s}{d_{ref}}\right)^2}{1 + \sqrt{1 + \left(\frac{2 L_f}{L_r + L_t}\right)^2}} $$
-*   **$X_{CP, fins}$:** Located at the geometric centroid of the fin area.
+*   **$X_{CP, fins}$:** Located at the Barrowman aerodynamic center (quarter-chord derived), not the geometric centroid.
 
 ### 5.3 Total Center of Pressure
 The rocket's total Center of Pressure is the weighted average of all component CPs, weighted by their $C_{N\alpha}$:

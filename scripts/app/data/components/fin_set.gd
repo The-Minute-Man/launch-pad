@@ -1,7 +1,10 @@
 class_name FinSet
 extends RocketComponent
 
+enum Shape { TRAPEZOIDAL, ELLIPTICAL }
+
 @export var fin_count: int = 3
+@export var shape_type: Shape = Shape.TRAPEZOIDAL
 @export var root_chord: float = 0.05
 @export var tip_chord: float = 0.02
 @export var span: float = 0.04
@@ -14,25 +17,25 @@ func _init() -> void:
 	material_name = "Plywood"
 
 func _calculate_mass() -> float:
-	# Area of a trapezoid
-	var area = ((root_chord + tip_chord) / 2.0) * span
+	var area = 0.0
+	if shape_type == Shape.TRAPEZOIDAL:
+		area = ((root_chord + tip_chord) / 2.0) * span
+	else:
+		area = (PI / 4.0) * root_chord * span
+		
 	var volume = area * thickness * float(fin_count)
-	
 	var density = MaterialDB.get_density(material_name)
 	return volume * density
 
 func _calculate_local_cg() -> float:
-	# Simplified CG for a trapezoidal fin
-	# Center of area of a trapezoid along the chord axis
-	# Formula: (root_chord^2 + root_chord*tip_chord + tip_chord^2 + sweep*(root_chord + 2*tip_chord)) / (3 * (root_chord + tip_chord))
-	var rc = root_chord
-	var tc = tip_chord
-	var s = sweep_length
-	
-	if (rc + tc) == 0.0: return 0.0
-	
-	var cg_x = (pow(rc, 2) + rc*tc + pow(tc, 2) + s*(rc + 2.0*tc)) / (3.0 * (rc + tc))
-	return cg_x
+	if shape_type == Shape.TRAPEZOIDAL:
+		var rc = root_chord
+		var tc = tip_chord
+		var s = sweep_length
+		if (rc + tc) == 0.0: return 0.0
+		return (pow(rc, 2) + rc*tc + pow(tc, 2) + s*(rc + 2.0*tc)) / (3.0 * (rc + tc))
+	else:
+		return root_chord / 2.0
 
 # Barrowman Normal Force Coefficient (C_N_alpha) for this fin set
 func get_cn_alpha(body_radius: float) -> float:
@@ -40,25 +43,43 @@ func get_cn_alpha(body_radius: float) -> float:
 	
 	var k_fb = 1.0 + (body_radius / (span + body_radius))
 	var s = span
-	var cr = root_chord
-	var ct = tip_chord
-	var l_r = sweep_length # length from root leading edge to tip leading edge
-	var l_m = l_r + (ct / 2.0) - (cr / 2.0) # Mid-chord sweep
+	var d_ref = body_radius * 2.0
 	
-	# Barrowman C_N_a formula
-	var term1 = (4.0 * float(fin_count) * pow(s / body_radius, 2))
-	var term2 = 1.0 + sqrt(1.0 + pow(2.0 * l_m / (cr + ct), 2))
+	# OpenRocket Interference Penalty for N >= 5
+	var interference = [1.0, 1.0, 1.0, 1.0, 1.0, 0.948, 0.892, 0.846, 0.810]
+	var idx = int(min(fin_count, 8))
+	var int_factor = interference[idx]
 	
-	return k_fb * (term1 / term2)
+	if shape_type == Shape.TRAPEZOIDAL:
+		var cr = root_chord
+		var ct = tip_chord
+		var l_r = sweep_length
+		var l_m = l_r + (ct / 2.0) - (cr / 2.0)
+		
+		# FIX: Use d_ref (diameter), not body_radius, resolving 4x overscaling error
+		var term1 = (4.0 * float(fin_count) * pow(s / d_ref, 2)) * int_factor
+		var term2 = 1.0 + sqrt(1.0 + pow(2.0 * l_m / (cr + ct), 2))
+		return k_fb * (term1 / term2)
+	else:
+		var term1 = (4.0 * float(fin_count) * pow(s / d_ref, 2)) * int_factor
+		var term2 = 2.0 # l_m = 0 for pure ellipse
+		return k_fb * (term1 / term2)
 
 # Barrowman Center of Pressure for this fin set
 func get_aerodynamic_cp() -> float:
-	var cr = root_chord
-	var ct = tip_chord
-	var s = sweep_length
-	
-	if (cr + ct) == 0.0: return 0.0
-	
-	# X_f = distance from fin root leading edge
-	var x_f = s / 3.0 * ((cr + 2.0 * ct) / (cr + ct)) + (1.0 / 6.0) * ((cr + ct) - (cr * ct) / (cr + ct))
-	return x_f
+	if shape_type == Shape.TRAPEZOIDAL:
+		var cr = root_chord
+		var ct = tip_chord
+		var s = sweep_length
+		if (cr + ct) == 0.0: return 0.0
+		# X_f = distance from fin root leading edge
+		return s / 3.0 * ((cr + 2.0 * ct) / (cr + ct)) + (1.0 / 6.0) * ((cr + ct) - (cr * ct) / (cr + ct))
+	else:
+		# Barrowman approximation for Elliptical Fin CP
+		return 0.288 * root_chord
+
+func get_local_Ixx(mass: float) -> float:
+	return (1.0/12.0) * mass * pow(root_chord, 2) + 0.5 * mass * pow(span / 2.0, 2)
+
+func get_local_Izz(mass: float) -> float:
+	return mass * pow(span / 2.0, 2)

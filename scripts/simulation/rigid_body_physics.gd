@@ -60,14 +60,19 @@ static func compute_derivatives(state: FlightState, env_system: FlightEnvironmen
 		
 	var w_dot = Vector3(w_dot_x, w_dot_y, w_dot_z)
 	
-	# 6. Quaternion Derivative (Using actual spherical rotation instead of vector averaging)
-	# For RK4 we still need a derivative. The derivative of a quaternion q is 0.5 * w * q
-	# To fix the brute force addition later, we will output the angular velocity directly
-	# and have rk4 apply the spherical rotation in the assembly step.
+	# 6. Quaternion Derivative (Exact derivative for intrinsic integration)
+	# q_dot = 0.5 * q * w (where w is in body frame, represented as a pure quaternion)
+	var q = state.orientation
+	var w = state.angular_velocity
+	var q_dot_w = 0.5 * (-q.x * w.x - q.y * w.y - q.z * w.z)
+	var q_dot_x = 0.5 * ( q.w * w.x + q.y * w.z - q.z * w.y)
+	var q_dot_y = 0.5 * ( q.w * w.y - q.x * w.z + q.z * w.x)
+	var q_dot_z = 0.5 * ( q.w * w.z + q.x * w.y - q.y * w.x)
+	var q_dot = Quaternion(q_dot_x, q_dot_y, q_dot_z, q_dot_w)
 	
 	return {
 		"v_dot": v_dot,
 		"p_dot": p_dot,
 		"w_dot": w_dot,
-		"angular_velocity": state.angular_velocity # Passed explicitly for proper spherical integration
+		"q_dot": q_dot
 	}

@@ -12,16 +12,13 @@ static func step(state: FlightState, env_system: FlightEnvironment, dt: float, r
 		new_state.velocity = base_state.velocity + derivs["v_dot"] * scale
 		new_state.angular_velocity = base_state.angular_velocity + derivs["w_dot"] * scale
 		
-		# Update orientation
-		# Proper spherical integration: q_new = q_old * exp(0.5 * w * dt)
-		var avg_w = derivs["angular_velocity"]
-		var w_mag = avg_w.length()
-		if w_mag > 0.0001:
-			var w_norm = avg_w / w_mag
-			var angle = w_mag * scale
-			var dq = Quaternion(w_norm, angle)
-			new_state.orientation = base_state.orientation * dq
-			new_state.orientation = new_state.orientation.normalized()
+		# Update orientation implicitly using the exact derivative
+		new_state.orientation = Quaternion(
+			base_state.orientation.x + derivs["q_dot"].x * scale,
+			base_state.orientation.y + derivs["q_dot"].y * scale,
+			base_state.orientation.z + derivs["q_dot"].z * scale,
+			base_state.orientation.w + derivs["q_dot"].w * scale
+		).normalized()
 			
 		return new_state
 
@@ -40,17 +37,18 @@ static func step(state: FlightState, env_system: FlightEnvironment, dt: float, r
 	var state_k4 = add_derivatives.call(state, k3, dt)
 	var k4 = RigidBodyPhysics.compute_derivatives(state_k4, env_system, ref_area, ref_length, rocket_length, thrust, sim_data)
 	
-	# Final State Assembly
+	# Final State Assembly (including proper quaternion assembly)
 	var next_state = state.duplicate()
 	next_state.time = state.time + dt
 	next_state.position += (dt / 6.0) * (k1["p_dot"] + 2.0 * k2["p_dot"] + 2.0 * k3["p_dot"] + k4["p_dot"])
 	next_state.velocity += (dt / 6.0) * (k1["v_dot"] + 2.0 * k2["v_dot"] + 2.0 * k3["v_dot"] + k4["v_dot"])
 	next_state.angular_velocity += (dt / 6.0) * (k1["w_dot"] + 2.0 * k2["w_dot"] + 2.0 * k3["w_dot"] + k4["w_dot"])
 	
-	# Specialized Quaternion Spherical Integration
-	var w_avg = (k1["angular_velocity"] + 2.0 * k2["angular_velocity"] + 2.0 * k3["angular_velocity"] + k4["angular_velocity"]) / 6.0
-	if w_avg.length() > 0.0001:
-		var dq = Quaternion(w_avg.normalized(), w_avg.length() * dt)
-		next_state.orientation = (state.orientation * dq).normalized()
+	next_state.orientation = Quaternion(
+		state.orientation.x + (dt / 6.0) * (k1["q_dot"].x + 2.0 * k2["q_dot"].x + 2.0 * k3["q_dot"].x + k4["q_dot"].x),
+		state.orientation.y + (dt / 6.0) * (k1["q_dot"].y + 2.0 * k2["q_dot"].y + 2.0 * k3["q_dot"].y + k4["q_dot"].y),
+		state.orientation.z + (dt / 6.0) * (k1["q_dot"].z + 2.0 * k2["q_dot"].z + 2.0 * k3["q_dot"].z + k4["q_dot"].z),
+		state.orientation.w + (dt / 6.0) * (k1["q_dot"].w + 2.0 * k2["q_dot"].w + 2.0 * k3["q_dot"].w + k4["q_dot"].w)
+	).normalized()
 	
 	return next_state

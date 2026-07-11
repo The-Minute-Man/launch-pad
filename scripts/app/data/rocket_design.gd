@@ -78,7 +78,7 @@ func get_total_length() -> float:
 			max_len = end_pos
 	return max_len
 
-# High-Fidelity 3x3 Inertia Tensor Approximation
+# High-Fidelity 3x3 Inertia Tensor Approximation using exact component integrals
 # Returns { "Ixx": float, "Iyy": float, "Izz": float }
 # Z is the longitudinal axis (roll), X and Y are lateral pitch/yaw
 func get_inertia_tensor() -> Dictionary:
@@ -91,24 +91,12 @@ func get_inertia_tensor() -> Dictionary:
 		var m = comp.get_mass()
 		var d = comp.get_global_cg() - cg
 		
-		# Simple local inertia approximation
-		# In a real system, each component would return its own local tensor
-		var r = get_max_diameter() / 2.0
-		var local_Izz = 0.5 * m * pow(r, 2)
-		
-		var comp_len = 0.0
-		if "length" in comp:
-			comp_len = comp.length
-		elif "packed_length" in comp:
-			comp_len = comp.packed_length
-		elif "root_chord" in comp:
-			comp_len = comp.root_chord
-			
-		var local_Ixx = (1.0/12.0) * m * pow(comp_len, 2) + 0.25 * m * pow(r, 2)
+		var local_Ixx = comp.get_local_Ixx(m)
+		var local_Izz = comp.get_local_Izz(m)
 		
 		# Parallel axis theorem
 		Ixx += local_Ixx + (m * pow(d, 2))
-		Iyy += local_Ixx + (m * pow(d, 2)) # Symmetrical
+		Iyy += local_Ixx + (m * pow(d, 2)) # Symmetrical for axisymmetric rocket
 		Izz += local_Izz
 	
 	return { "Ixx": Ixx, "Iyy": Iyy, "Izz": Izz }
@@ -132,7 +120,7 @@ func get_aerodynamics() -> Dictionary:
 		elif comp is Transition:
 			cn_a = comp.get_cn_alpha()
 			# Normalizing based on reference area diameter
-			cn_a *= pow(max_d / comp.fore_diameter, 2) # Rough normalization
+			cn_a /= pow(max_d, 2)
 			cp_local = comp.get_aerodynamic_cp()
 			
 		# Add global position offset to the local CP
@@ -176,7 +164,10 @@ func get_wetted_area() -> float:
 			var slant = sqrt(pow(R1 - R2, 2) + pow(comp.length, 2))
 			area += PI * (R1 + R2) * slant
 		elif comp is FinSet:
-			area += 2.0 * comp.span * comp.root_chord * comp.fin_count
+			if comp.shape_type == FinSet.Shape.TRAPEZOIDAL:
+				area += comp.span * (comp.root_chord + comp.tip_chord) * comp.fin_count
+			else:
+				area += 2.0 * (PI / 4.0) * comp.root_chord * comp.span * comp.fin_count
 	return area
 
 func get_fin_span() -> float:

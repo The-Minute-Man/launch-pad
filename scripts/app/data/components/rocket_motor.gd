@@ -43,3 +43,11 @@ func get_mass_at_time(time: float) -> float:
 	# Assume linear propellant burn for simplicity (or integrate the thrust curve)
 	var burned_fraction = time / burn_time
 	return total_mass - (propellant_mass * burned_fraction)
+
+func get_local_Ixx(mass: float) -> float:
+	var R = diameter / 2.0
+	return mass * (pow(length, 2) / 12.0 + pow(R, 2) / 4.0)
+
+func get_local_Izz(mass: float) -> float:
+	var R = diameter / 2.0
+	return mass * pow(R, 2) / 2.0

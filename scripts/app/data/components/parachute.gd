@@ -20,3 +20,11 @@ func _calculate_mass() -> float:
 func _calculate_local_cg() -> float:
 	# Packed parachute CG is usually the center of its packed length
 	return packed_length / 2.0
+
+func get_local_Ixx(mass: float) -> float:
+	var R = 0.02 # Assuming 4cm packed diameter
+	return mass * (pow(packed_length, 2) / 12.0 + pow(R, 2) / 4.0)
+
+func get_local_Izz(mass: float) -> float:
+	var R = 0.02
+	return mass * pow(R, 2) / 2.0
