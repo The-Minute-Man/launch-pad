@@ -1,5 +1,7 @@
 extends PanelContainer
 
+signal component_added(type: String)
+
 @onready var home_tools: VBoxContainer = %HomeTools
 @onready var editor_tools: VBoxContainer = %EditorTools
 @onready var rocket_components_tools: VBoxContainer = %RocketComponentsTools
@@ -65,12 +67,13 @@ func _show_sub_components(category: String) -> void:
 				var actual_file = file_name.replace(".import", "")
 				if actual_file.ends_with(".svg") and not processed_files.has(actual_file):
 					processed_files[actual_file] = true
-					_create_sub_btn("res://ui/icons/rocket_components/" + category + "/" + actual_file, actual_file.replace(".svg", "").replace("_", " "))
+					var type_name = actual_file.replace(".svg", "")
+					_create_sub_btn("res://ui/icons/rocket_components/" + category + "/" + actual_file, type_name.replace("_", " "), type_name)
 			file_name = dir.get_next()
 			
 	set_mode("sub_components")
 
-func _create_sub_btn(icon_path: String, tooltip: String) -> void:
+func _create_sub_btn(icon_path: String, tooltip: String, type_name: String) -> void:
 	var btn = Button.new()
 	btn.custom_minimum_size = Vector2(48, 48)
 	btn.tooltip_text = tooltip.capitalize()
@@ -80,4 +83,5 @@ func _create_sub_btn(icon_path: String, tooltip: String) -> void:
 		btn.icon = tex
 	btn.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	btn.expand_icon = true
+	btn.pressed.connect(func(): component_added.emit(type_name))
 	sub_items.add_child(btn)

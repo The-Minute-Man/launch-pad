@@ -4,11 +4,13 @@ var current_project_path: String = ""
 var rocket_design: RocketDesign = null
 var selected_component: RocketComponent = null
 
-@onready var top_bar: PanelContainer = $VBoxLayout/TopBar
-@onready var tree: Tree = $VBoxLayout/HBoxLayout/ContentMargin/ContentVBox/MainEditorArea/LeftPanel/ComponentTree
-@onready var inspector_vbox: VBoxContainer = $VBoxLayout/HBoxLayout/ContentMargin/ContentVBox/MainEditorArea/RightPanel/ScrollContainer/InspectorVBox
-@onready var stats_label: Label = $VBoxLayout/HBoxLayout/ContentMargin/ContentVBox/StatsLabel
-@onready var rocket_3d: Node3D = $VBoxLayout/HBoxLayout/ContentMargin/ContentVBox/MainEditorArea/CenterPanel/SubViewportContainer/SubViewport/Rocket
+@onready var top_bar: PanelContainer = $UI_Overlay/TopBar
+@onready var tree: Tree = $UI_Overlay/HBoxLayout/ContentArea/RightPanel/VSplitContainer/ComponentTreePanel/ComponentTree
+@onready var inspector_vbox: VBoxContainer = $UI_Overlay/HBoxLayout/ContentArea/RightPanel/VSplitContainer/InspectorPanel/ScrollContainer/InspectorVBox
+@onready var stats_label: Label = $UI_Overlay/HBoxLayout/ContentArea/BottomLeftControls/VBoxContainer/PanelContainer/MarginContainer/StatsLabel
+@onready var rocket_3d: Node3D = $"3DBackground/SubViewport/Rocket"
+@onready var auto_rotate_toggle: Button = $UI_Overlay/HBoxLayout/ContentArea/BottomLeftControls/VBoxContainer/AutoRotateContainer/AutoRotateToggle
+@onready var orbit_camera: Node3D = $"3DBackground/SubViewport/CameraGimbal"
 
 func setup(file_path: String) -> void:
 	current_project_path = file_path
@@ -23,43 +25,49 @@ func setup(file_path: String) -> void:
 		top_bar.set_project_title("Error Loading Project")
 
 func _ready() -> void:
-	$VBoxLayout/HBoxLayout/SideBar.set_mode("editor")
+	var side_bar = $UI_Overlay/HBoxLayout/SideBar
+	side_bar.set_mode("editor")
+	side_bar.component_added.connect(_on_component_added)
 	
-	# Create a dummy rocket for testing the UI
 	rocket_design = RocketDesign.new()
-	var nose = NoseCone.new()
-	nose.length = 0.15
-	nose.base_diameter = 0.04
-	nose.component_name = "Nose Cone"
-	rocket_design.add_component(nose)
-	
-	var body = BodyTube.new()
-	body.length = 0.5
-	body.outer_diameter = 0.04
-	body.inner_diameter = 0.038
-	body.component_name = "Body Tube"
-	rocket_design.add_component(body)
-	
-	var fins = FinSet.new()
-	fins.root_chord = 0.05
-	fins.span = 0.04
-	fins.component_name = "Fin Set"
-	rocket_design.add_component(fins)
-	
-	var motor_path = "res://scripts/app/data/databases/parts/motors/C6_5f4294d20002e900000004e7.eng"
-	var motor = MotorParser.parse_eng_file(motor_path)
-	if motor != null:
-		motor.component_name = "C6 Motor"
-		rocket_design.add_component(motor)
 	
 	tree.item_selected.connect(_on_tree_item_selected)
+	auto_rotate_toggle.toggled.connect(func(pressed): orbit_camera.auto_rotate = pressed)
+	
 	_refresh_tree()
 	_update_visuals()
+
+func _on_component_added(type_name: String) -> void:
+	var comp: RocketComponent = null
+	match type_name:
+		"nose_cone": comp = NoseCone.new()
+		"body_tube": comp = BodyTube.new()
+		"transition": comp = Transition.new()
+		"trapezoidal_fin":
+			comp = FinSet.new()
+			comp.shape_type = FinSet.Shape.TRAPEZOIDAL
+		"elliptical_fin":
+			comp = FinSet.new()
+			comp.shape_type = FinSet.Shape.ELLIPTICAL
+		"free_form_fin", "tube_fins", "fin_set":
+			comp = FinSet.new()
+		"parachute": comp = Parachute.new()
+		"rocket_motor", "engine_block", "stage", "boosters", "pods":
+			comp = RocketMotor.new()
+			
+	if comp:
+		comp.component_name = type_name.replace("_", " ").capitalize()
+		rocket_design.add_component(comp)
+		_refresh_tree()
+		_update_visuals()
 
 func _refresh_tree() -> void:
 	tree.clear()
 	var root = tree.create_item()
-	root.set_text(0, "My Rocket")
+	var proj_name = "My Rocket"
+	if top_bar and top_bar.project_title.text != "":
+		proj_name = top_bar.project_title.text
+	root.set_text(0, proj_name)
 	
 	for comp in rocket_design.components:
 		var item = tree.create_item(root)

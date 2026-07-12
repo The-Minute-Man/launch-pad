@@ -43,9 +43,9 @@ func get_surface_roughness() -> float:
 
 # --- High-Fidelity Exact Inertia ---
 # Returns the exact local moment of inertia around the pitch/yaw (X/Y) axis through the component's LOCAL CG.
-func get_local_Ixx(mass: float) -> float:
+func get_local_Ixx(_mass: float) -> float:
 	return 0.0
 
 # Returns the exact local moment of inertia around the roll (Z) axis.
-func get_local_Izz(mass: float) -> float:
+func get_local_Izz(_mass: float) -> float:
 	return 0.0
